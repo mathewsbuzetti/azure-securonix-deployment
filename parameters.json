@@ -12,7 +12,7 @@
             "value": "password"
         },
         "adminPasswordOrKey": {
-            "value": null
+            "value": "SuaSenhaAqui"
         },
         "location": {
             "value": "[resourceGroup().location]"
@@ -21,19 +21,13 @@
             "value": "Standard_D4s_v3"
         },
         "virtualNetworkName": {
-            "value": null
-        },
-        "virtualNetworkResourceGroup": {
-            "value": null
+            "value": "vNet1"
         },
         "subnetName": {
-            "value": null
+            "value": "Subnet1"
         },
         "networkSecurityGroupName": {
-            "value": null
-        },
-        "networkSecurityGroupResourceGroup": {
-            "value": null
+            "value": "SecGroupNet1"
         },
         "securityType": {
             "value": "Standard"
