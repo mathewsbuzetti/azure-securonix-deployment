@@ -41,7 +41,6 @@
         },
         "dnsLabelPrefix": {
             "type": "string",
-            "defaultValue": "[toLower(format('{0}-{1}', parameters('vmName'), uniqueString(resourceGroup().id)))]",
             "metadata": {
                 "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
             }
@@ -97,7 +96,7 @@
         "imageReference": {
             "publisher": "Oracle",
             "offer": "oracle-linux",
-            "sku": "ol83-lvm",
+            "sku": "8_5",
             "version": "latest"
         },
         "publicIPAddressName": "[format('{0}PublicIP', parameters('vmName'))]",
@@ -140,7 +139,7 @@
                         "name": "ipconfig1",
                         "properties": {
                             "subnet": {
-                                "id": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName')), '2023-09-01').subnets[0].id]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
                             },
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIPAddress": {
