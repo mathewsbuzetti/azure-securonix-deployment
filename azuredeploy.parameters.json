@@ -5,6 +5,9 @@
         "vmName": {
             "value": "VM-RIN"
         },
+        "vmSize": {
+            "value": "Standard_D4s_v3"
+        },
         "adminUsername": {
             "value": "azureuser"
         },
@@ -15,10 +18,7 @@
             "value": "SuaSenhaSeguraAqui123!"
         },
         "dnsLabelPrefix": {
-            "value": "vm-rin-dns"
-        },
-        "vmSize": {
-            "value": "Standard_D4s_v3"
+            "value": "vm-rin"
         },
         "virtualNetworkName": {
             "value": "vnet-rin"
@@ -28,6 +28,9 @@
         },
         "networkSecurityGroupName": {
             "value": "nsg-rin"
+        },
+        "securityType": {
+            "value": "Standard"
         },
         "location": {
             "value": "eastus"
