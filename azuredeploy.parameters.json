@@ -29,3 +29,11 @@
         "subnetName": {
             "value": "Subnet-RIN"
         },
+        "networkSecurityGroupName": {
+            "value": "nsg-RIN"
+        },
+        "securityType": {
+            "value": "Standard"
+        }
+    }
+}
