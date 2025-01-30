@@ -1,0 +1,116 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+    "handler": "Microsoft.Azure.CreateUIDef",
+    "version": "0.1.2-preview",
+    "parameters": {
+        "basics": [
+            {
+                "name": "vmName",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Nome da VM",
+                "defaultValue": "VM-RIN",
+                "toolTip": "Nome da máquina virtual",
+                "constraints": {
+                    "required": true
+                }
+            }
+        ],
+        "steps": [
+            {
+                "name": "vmSettings",
+                "label": "Configurações da VM",
+                "elements": [
+                    {
+                        "name": "vmSize",
+                        "type": "Microsoft.Compute.SizeSelector",
+                        "label": "Tamanho da VM",
+                        "toolTip": "O tamanho da VM",
+                        "defaultValue": "Standard_D4s_v3",
+                        "constraints": {
+                            "allowedSizes": ["Standard_D4s_v3"]
+                        },
+                        "visible": true
+                    },
+                    {
+                        "name": "adminCredentials",
+                        "type": "Microsoft.Compute.CredentialsCombo",
+                        "label": {
+                            "password": "Senha",
+                            "confirmPassword": "Confirmar senha",
+                            "userName": "Nome do usuário"
+                        },
+                        "toolTip": {
+                            "userName": "Nome do usuário administrador",
+                            "password": "Senha do administrador"
+                        },
+                        "constraints": {
+                            "required": true
+                        },
+                        "osPlatform": "Linux"
+                    }
+                ]
+            },
+            {
+                "name": "networking",
+                "label": "Configurações de Rede",
+                "elements": [
+                    {
+                        "name": "virtualNetwork",
+                        "type": "Microsoft.Network.VirtualNetworkCombo",
+                        "label": {
+                            "virtualNetwork": "Rede Virtual",
+                            "subnets": "Subnets"
+                        },
+                        "toolTip": {
+                            "virtualNetwork": "Selecione uma rede virtual existente ou crie uma nova",
+                            "subnets": "Selecione uma subnet existente ou crie uma nova"
+                        },
+                        "defaultValue": {
+                            "name": "vNet",
+                            "addressPrefixSize": "/16"
+                        },
+                        "constraints": {
+                            "minAddressPrefixSize": "/16"
+                        },
+                        "options": {
+                            "hideExisting": false
+                        },
+                        "visible": true
+                    },
+                    {
+                        "name": "networkSecurityGroup",
+                        "type": "Microsoft.Network.NetworkSecurityGroupCombo",
+                        "label": {
+                            "nsg": "Grupo de Segurança de Rede",
+                            "securityRules": "Regras de Segurança"
+                        },
+                        "toolTip": {
+                            "nsg": "Selecione um NSG existente ou crie um novo"
+                        },
+                        "defaultValue": {
+                            "name": "nsg-rin"
+                        },
+                        "options": {
+                            "hideExisting": false
+                        },
+                        "visible": true
+                    }
+                ]
+            }
+        ],
+        "outputs": {
+            "vmName": "[basics('vmName')]",
+            "location": "[location()]",
+            "vmSize": "[steps('vmSettings').vmSize]",
+            "adminUsername": "[steps('vmSettings').adminCredentials.userName]",
+            "adminPasswordOrKey": "[steps('vmSettings').adminCredentials.password]",
+            "authenticationType": "password",
+            "virtualNetworkName": "[steps('networking').virtualNetwork.name]",
+            "virtualNetworkResourceGroup": "[steps('networking').virtualNetwork.resourceGroup]",
+            "subnetName": "[steps('networking').virtualNetwork.subnets.subnet1.name]",
+            "networkSecurityGroupName": "[steps('networking').networkSecurityGroup.nsg.name]",
+            "networkSecurityGroupResourceGroup": "[steps('networking').networkSecurityGroup.nsg.resourceGroup]",
+            "securityType": "Standard"
+        }
+    }
+}
