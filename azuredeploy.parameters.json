@@ -29,23 +29,8 @@
         "networkSecurityGroupName": {
             "value": "nsg-rin"
         },
-        "securityType": {
-            "value": "Standard"
-        },
         "location": {
             "value": "eastus"
         },
         "osDiskType": {
             "value": "StandardSSD_LRS"
-        },
-        "osDiskSizeGB": {
-            "value": 100
-        },
-        "dataDiskType": {
-            "value": "Premium_LRS"
-        },
-        "dataDiskSizeGB": {
-            "value": 300
-        }
-    }
-}
