@@ -11,4 +11,41 @@
         "adminUsername": {
             "value": "azureuser"
         },
-        "authenticationType
+        "authenticationType": {
+            "value": "password"
+        },
+        "adminPasswordOrKey": {
+            "value": "SuaSenhaSeguraAqui123!"
+        },
+        "dnsLabelPrefix": {
+            "value": "vm-rin"
+        },
+        "virtualNetworkName": {
+            "value": "vnet-rin"
+        },
+        "subnetName": {
+            "value": "subnet-rin"
+        },
+        "networkSecurityGroupName": {
+            "value": "nsg-rin"
+        },
+        "securityType": {
+            "value": "Standard"
+        },
+        "location": {
+            "value": "eastus"
+        },
+        "osDiskType": {
+            "value": "StandardSSD_LRS"
+        },
+        "osDiskSizeGB": {
+            "value": 100
+        },
+        "dataDiskType": {
+            "value": "Premium_LRS"
+        },
+        "dataDiskSizeGB": {
+            "value": 300
+        }
+    }
+}
