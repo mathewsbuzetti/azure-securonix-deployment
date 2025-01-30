@@ -10,7 +10,7 @@
 
 | Título | Descrição do Recurso |
 |--------|---------------------|
-| **Título** | Início Rápido: Usar um modelo do Resource Manager para criar uma VM do Oracle Linux para Securonix |
+| **Título** | Template ARM para Provisionamento de VM Securonix no Azure |
 | **Assunto** | Azure Virtual Machines |
 | **Subcategoria** | Linux |
 | **Tipo** | Início Rápido |
