@@ -1,6 +1,11 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
+    "metadata": {
+        "name": "VM Securonix Oracle Linux 8",
+        "description": "Template para criação de VM Oracle Linux 8 com configurações específicas para Securonix",
+        "author": "Mathews Buzetti"
+    },
     "parameters": {
         "vmName": {
             "type": "string",
