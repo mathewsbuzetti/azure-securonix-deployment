@@ -21,7 +21,7 @@
 ## 🖥️ Especificações
 
 - 🐧 **SO**: Oracle Linux 8.10
-- 💻 **Recursos**: 4 vCPUs, 16GB RAM
+- 💻 **Recursos**: D4s v3 (4 vCPUs, 16GB RAM)
 - 💾 **Armazenamento**:
   - Disco SO: 100GB StandardSSD_LRS
   - Disco Dados: 300GB Premium_LRS
