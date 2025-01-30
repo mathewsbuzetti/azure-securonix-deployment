@@ -12,22 +12,25 @@
             "value": "password"
         },
         "adminPasswordOrKey": {
-            "value": "SuaSenhaAqui"
+            "value": "SuaSenhaSeguraAqui123!"
+        },
+        "dnsLabelPrefix": {
+            "value": "vm-rin"
         },
         "location": {
-            "value": "[resourceGroup().location]"
+            "value": "eastus"
         },
         "vmSize": {
             "value": "Standard_D4s_v3"
         },
         "virtualNetworkName": {
-            "value": "vNet1"
+            "value": "vNet-RIN"
         },
         "subnetName": {
-            "value": "Subnet1"
+            "value": "Subnet-RIN"
         },
         "networkSecurityGroupName": {
-            "value": "SecGroupNet1"
+            "value": "nsg-RIN"
         },
         "securityType": {
             "value": "Standard"
