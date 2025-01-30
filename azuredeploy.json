@@ -107,6 +107,77 @@
                         "path": "[format('/home/{0}/.ssh/authorized_keys', parameters('adminUsername'))]",
                         "keyData": "[parameters('adminPasswordOrKey')]"
                     }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2023-09-01",
+            "name": "[parameters('vmName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('vmSize')]"
+                },
+                "storageProfile": {
+                    "osDisk": {
+                        "createOption": "FromImage",
+                        "managedDisk": {
+                            "storageAccountType": "[variables('osDiskType')]"
+                        },
+                        "diskSizeGB": "[variables('osDiskSizeGB')]"
+                    },
+                    "imageReference": "[variables('imageReference')]",
+                    "dataDisks": [
+                        {
+                            "lun": 0,
+                            "name": "[format('{0}-datadisk', parameters('vmName'))]",
+                            "createOption": "Empty",
+                            "diskSizeGB": "[variables('dataDiskSizeGB')]",
+                            "managedDisk": {
+                                "storageAccountType": "[variables('dataDiskType')]"
+                            }
+                        }
+                    ]
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('vmName')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPasswordOrKey')]",
+                    "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), null(), variables('linuxConfiguration'))]",
+                    "customData": "[base64(variables('customData'))]"
+                },
+                "securityProfile": "[if(equals(parameters('securityType'), 'TrustedLaunch'), variables('securityProfileJson'), null())]"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+            ]
+        }
+    ],
+    "outputs": {
+        "adminUsername": {
+            "type": "string",
+            "value": "[parameters('adminUsername')]"
+        },
+        "hostname": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))).dnsSettings.fqdn]"
+        },
+        "sshCommand": {
+            "type": "string",
+            "value": "[format('ssh {0}@{1}', parameters('adminUsername'), reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))).dnsSettings.fqdn)]"
+        }
+    }
+}
                 ]
             }
         },
@@ -158,3 +229,4 @@
                 ],
                 "networkSecurityGroup": {
                     "id": "[resourceId(parameters('networkSecurityGroupResourceGroup'), 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+                }
