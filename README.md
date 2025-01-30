@@ -82,18 +82,18 @@ Configuração automática das partições LVM:
 ```bash
 #!/bin/bash
 
-# Aguarda o disco ficar disponível
+# Aguardar que o disco fique disponível
 while [ ! -b /dev/sdb ]; do
     sleep 1
 done
 
-# Inicializa o disco
+# Inicializar o disco
 pvcreate /dev/sdb
 
-# Cria grupo de volumes
+# Criar grupo de volumes
 vgcreate vg_system /dev/sdb
 
-# Cria volumes lógicos com suas respectivas configurações
+# Criar volumes lógicos
 lvcreate -L 9.5G -n vg_system_swap vg_system
 lvcreate -L 20G -n vg_system_root vg_system
 lvcreate -L 10G -n vg_system_tmp vg_system
@@ -101,8 +101,38 @@ lvcreate -L 10G -n vg_system_var vg_system
 lvcreate -L 20G -n vg_system_home vg_system
 lvcreate -L 10G -n vg_system_opt vg_system
 
-# Formata os volumes (comandos omitidos por brevidade)
-# ... (resto do script original)
+# Formatar os volumes
+mkswap /dev/vg_system/vg_system_swap
+mkfs.xfs /dev/vg_system/vg_system_root
+mkfs.xfs /dev/vg_system/vg_system_tmp
+mkfs.xfs /dev/vg_system/vg_system_var
+mkfs.xfs /dev/vg_system/vg_system_home
+mkfs.xfs /dev/vg_system/vg_system_opt
+
+# Criar pontos de montagem
+mkdir -p /mnt/root
+mkdir -p /mnt/tmp
+mkdir -p /mnt/var
+mkdir -p /mnt/home/securonix
+mkdir -p /mnt/opt
+
+# Montar os volumes
+mount /dev/vg_system/vg_system_root /mnt/root
+mount /dev/vg_system/vg_system_tmp /mnt/tmp
+mount /dev/vg_system/vg_system_var /mnt/var
+mount /dev/vg_system/vg_system_home /mnt/home/securonix
+mount /dev/vg_system/vg_system_opt /mnt/opt
+
+# Adicionar entradas ao fstab
+echo "/dev/vg_system/vg_system_swap swap swap defaults 0 0" >> /etc/fstab
+echo "/dev/vg_system/vg_system_root /root xfs defaults 0 0" >> /etc/fstab
+echo "/dev/vg_system/vg_system_tmp /tmp xfs defaults 0 0" >> /etc/fstab
+echo "/dev/vg_system/vg_system_var /var xfs defaults 0 0" >> /etc/fstab
+echo "/dev/vg_system/vg_system_home /home/securonix xfs defaults 0 0" >> /etc/fstab
+echo "/dev/vg_system/vg_system_opt /opt xfs defaults 0 0" >> /etc/fstab
+
+# Ativar a swap
+swapon /dev/vg_system/vg_system_swap
 ```
 
 ## 🧹 Limpeza dos Recursos
@@ -125,5 +155,3 @@ Para remover todos os recursos associados:
 - 📝 Atribuição necessária em caso de uso ou redistribuição
 - 🚫 Proibida a venda direta do código-fonte
 - 🤝 Contribuições são bem-vindas
-
-
