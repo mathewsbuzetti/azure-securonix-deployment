@@ -35,6 +35,7 @@
 
 ## 🚀 Deploy
 
+Clique no botão abaixo para fazer o deploy no Azure:
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmathewsbuzetti%2Fsecuronixish%2Fmain%2Fazuredeploy.json)
 
 ## 📝 Como usar
