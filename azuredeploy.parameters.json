@@ -39,7 +39,7 @@
       "value": {
         "publisher": "Oracle",
         "offer": "Oracle-Linux",
-        "sku": "ol8_2",
+        "sku": "8_5",
         "version": "latest"
       }
     }
