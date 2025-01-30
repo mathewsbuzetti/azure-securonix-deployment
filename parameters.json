@@ -23,14 +23,23 @@
         "vmSize": {
             "value": "Standard_D4s_v3"
         },
+        "useExistingNetwork": {
+            "value": false
+        },
         "virtualNetworkName": {
             "value": "vNet-RIN"
+        },
+        "virtualNetworkResourceGroup": {
+            "value": "seu-resource-group"
         },
         "subnetName": {
             "value": "Subnet-RIN"
         },
         "networkSecurityGroupName": {
             "value": "nsg-RIN"
+        },
+        "networkSecurityGroupResourceGroup": {
+            "value": "seu-resource-group"
         },
         "securityType": {
             "value": "Standard"
