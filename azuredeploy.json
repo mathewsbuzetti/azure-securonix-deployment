@@ -69,41 +69,23 @@
         },
         "virtualNetworkName": {
             "type": "string",
-            "allowedValues": [
-                "vNet",
-                "vNet-Prod",
-                "vNet-Dev",
-                "Create new"
-            ],
-            "defaultValue": "vNet",
             "metadata": {
-                "description": "Select an existing VNet or create a new one"
+                "description": "Virtual Network",
+                "strongType": "Microsoft.Network/virtualNetworks"
             }
         },
         "subnetName": {
             "type": "string",
-            "allowedValues": [
-                "Subnet",
-                "SubnetA",
-                "SubnetB",
-                "Create new"
-            ],
-            "defaultValue": "Subnet",
             "metadata": {
-                "description": "Select an existing Subnet or create a new one"
+                "description": "Subnet",
+                "strongType": "Microsoft.Network/virtualNetworks/subnets"
             }
         },
         "networkSecurityGroupName": {
             "type": "string",
-            "allowedValues": [
-                "SecGroupNet",
-                "NSG-Prod",
-                "NSG-Dev",
-                "Create new"
-            ],
-            "defaultValue": "SecGroupNet",
             "metadata": {
-                "description": "Select an existing NSG or create a new one"
+                "description": "Network Security Group",
+                "strongType": "Microsoft.Network/networkSecurityGroups"
             }
         },
         "networkSecurityGroupResourceGroup": {
