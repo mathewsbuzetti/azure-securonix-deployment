@@ -126,7 +126,7 @@
             },
             "securityType": "[parameters('securityType')]"
         },
-        "customData": "#!/bin/bash\n\n# Aguarda dispositivos de disco estarem disponíveis\nwhile [ ! -b /dev/sda ] || [ ! -b /dev/sdc ]; do\n    echo \"Aguardando dispositivos de disco...\"\n    sleep 5\ndone\n\n# Deleta partições existentes em /dev/sda\ndd if=/dev/zero of=/dev/sda bs=512 count=1\nsync\n\n# Cria nova tabela de partição\nparted /dev/sda mklabel gpt\n\n# Cria partições\nparted /dev/sda mkpart primary 1MiB 512MiB  # /boot/efi\nparted /dev/sda mkpart primary 512MiB 1024MiB  # /boot\nparted /dev/sda mkpart primary 1024MiB 2048MiB  # biosboot\nparted /dev/sda mkpart primary 2048MiB 100%  # LVM\n\n# Define flags\nparted /dev/sda set 1 esp on\nparted /dev/sda set 3 bios_grub on\nparted /dev/sda set 4 lvm on\n\n# Aguarda o sistema reconhecer as novas partições\nsleep 5\n\n# Formata partições de boot\nmkfs.fat -F32 /dev/sda1\nmkfs.xfs /dev/sda2\n\n# Configura LVM\npvcreate /dev/sda4\nvgcreate vg_system /dev/sda4\n\n# Cria volumes lógicos\nlvcreate -L 9.5G -n vg_system_swap vg_system\nlvcreate -L 20G -n vg_system_root vg_system\nlvcreate -L 10G -n vg_system_tmp vg_system\nlvcreate -L 10G -n vg_system_var vg_system\nlvcreate -L 20G -n vg_system_home vg_system\nlvcreate -L 10G -n vg_system_opt vg_system\n\n# Formata volumes lógicos\nmkswap /dev/vg_system/vg_system_swap\nmkfs.xfs /dev/vg_system/vg_system_root\nmkfs.xfs /dev/vg_system/vg_system_tmp\nmkfs.xfs /dev/vg_system/vg_system_var\nmkfs.xfs /dev/vg_system/vg_system_home\nmkfs.xfs /dev/vg_system/vg_system_opt\n\n# Cria pontos de montagem\nmkdir -p /mnt/root\nmkdir -p /mnt/tmp\nmkdir -p /mnt/var\nmkdir -p /mnt/home/securonix\nmkdir -p /mnt/opt\nmkdir -p /mnt/boot\nmkdir -p /mnt/boot/efi\n\n# Monta os volumes\nmount /dev/vg_system/vg_system_root /mnt/root\nmount /dev/vg_system/vg_system_tmp /mnt/tmp\nmount /dev/vg_system/vg_system_var /mnt/var\nmount /dev/vg_system/vg_system_home /mnt/home/securonix\nmount /dev/vg_system/vg_system_opt /mnt/opt\nmount /dev/sda2 /mnt/boot\nmount /dev/sda1 /mnt/boot/efi\n\n# Configura fstab\ncat > /etc/fstab << 'EOL'\n# /etc/fstab\n/dev/vg_system/vg_system_swap swap swap defaults 0 0\n/dev/vg_system/vg_system_root /root xfs defaults 0 0\n/dev/vg_system/vg_system_tmp /tmp xfs defaults 0 0\n/dev/vg_system/vg_system_var /var xfs defaults 0 0\n/dev/vg_system/vg_system_home /home/securonix xfs defaults 0 0\n/dev/vg_system/vg_system_opt /opt xfs defaults 0 0\n/dev/sda2 /boot xfs defaults 0 0\n/dev/sda1 /boot/efi vfat defaults 0 0\nEOL\n\n# Ativa swap\nswapon /dev/vg_system/vg_system_swap\n\n# Registra conclusão do script\necho \"Script de configuração de disco concluído\" > /var/log/disk_setup.log"
+        "customData": "#!/bin/bash\n\n# Aguarda o disco do sistema ficar disponível\nwhile [ ! -b /dev/sda ]; do\n    sleep 1\ndone\n\n# Inicializa o disco do sistema\npvcreate /dev/sda4\n\n# Cria grupo de volumes no disco do sistema\nvgcreate vg_system /dev/sda4\n\n# Cria volumes lógicos\nlvcreate -L 9.5G -n vg_system_swap vg_system\nlvcreate -L 20G -n vg_system_root vg_system\nlvcreate -L 10G -n vg_system_tmp vg_system\nlvcreate -L 10G -n vg_system_var vg_system\nlvcreate -L 20G -n vg_system_home vg_system\nlvcreate -L 10G -n vg_system_opt vg_system\n\n# Formata os volumes\nmkswap /dev/vg_system/vg_system_swap\nmkfs.xfs /dev/vg_system/vg_system_root\nmkfs.xfs /dev/vg_system/vg_system_tmp\nmkfs.xfs /dev/vg_system/vg_system_var\nmkfs.xfs /dev/vg_system/vg_system_home\nmkfs.xfs /dev/vg_system/vg_system_opt\n\n# Cria pontos de montagem\nmkdir -p /mnt/root\nmkdir -p /mnt/tmp\nmkdir -p /mnt/var\nmkdir -p /mnt/home/securonix\nmkdir -p /mnt/opt\n\n# Monta os volumes\nmount /dev/vg_system/vg_system_root /mnt/root\nmount /dev/vg_system/vg_system_tmp /mnt/tmp\nmount /dev/vg_system/vg_system_var /mnt/var\nmount /dev/vg_system/vg_system_home /mnt/home/securonix\nmount /dev/vg_system/vg_system_opt /mnt/opt\n\n# Adiciona entradas ao fstab\necho '/dev/vg_system/vg_system_swap swap swap defaults 0 0' >> /etc/fstab\necho '/dev/vg_system/vg_system_root /root xfs defaults 0 0' >> /etc/fstab\necho '/dev/vg_system/vg_system_tmp /tmp xfs defaults 0 0' >> /etc/fstab\necho '/dev/vg_system/vg_system_var /var xfs defaults 0 0' >> /etc/fstab\necho '/dev/vg_system/vg_system_home /home/securonix xfs defaults 0 0' >> /etc/fstab\necho '/dev/vg_system/vg_system_opt /opt xfs defaults 0 0' >> /etc/fstab\n\n# Ativa a swap\nswapon /dev/vg_system/vg_system_swap"
     },
     "resources": [
         {
@@ -239,3 +239,52 @@
                         },
                         "diskSizeGB": "[variables('osDiskSizeGB')]"
                     },
+                    "imageReference": "[variables('imageReference')]",
+                    "dataDisks": [
+                        {
+                            "lun": 0,
+                            "name": "[format('{0}-datadisk', parameters('vmName'))]",
+                            "createOption": "Empty",
+                            "diskSizeGB": "[variables('dataDiskSizeGB')]",
+                            "managedDisk": {
+                                "storageAccountType": "[variables('dataDiskType')]"
+                            }
+                        }
+                    ]
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('vmName')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPasswordOrKey')]",
+                    "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), null(), variables('linuxConfiguration'))]",
+                    "customData": "[base64(variables('customData'))]"
+                },
+                "securityProfile": "[if(equals(parameters('securityType'), 'TrustedLaunch'), variables('securityProfileJson'), null())]"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+            ]
+        }
+    ],
+    "outputs": {
+        "adminUsername": {
+            "type": "string",
+            "value": "[parameters('adminUsername')]"
+        },
+        "hostname": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName')), '2023-09-01').dnsSettings.fqdn]"
+        },
+        "sshCommand": {
+            "type": "string",
+            "value": "[format('ssh {0}@{1}', parameters('adminUsername'), reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName')), '2023-09-01').dnsSettings.fqdn)]"
+        }
+    }
+}
