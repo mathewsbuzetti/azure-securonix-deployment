@@ -20,7 +20,7 @@
 
 ## 🖥️ Especificações
 
-- 🐧 **SO**: Oracle Linux 8
+- 🐧 **SO**: Oracle Linux 8.10
 - 💻 **Recursos**: 4 vCPUs, 16GB RAM
 - 💾 **Armazenamento**:
   - Disco SO: 100GB StandardSSD_LRS
