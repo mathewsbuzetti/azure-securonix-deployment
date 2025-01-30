@@ -1,47 +1,31 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "vmName": {
-      "value": "VM-RIN"
-    },
-    "adminUsername": {
-      "value": "azureuser"
-    },
-    "authenticationType": {
-      "value": "password"
-    },
-    "adminPasswordOrKey": {
-      "value": "SuaSenhaSeguraAqui123!"
-    },
-    "dnsLabelPrefix": {
-      "value": "vm-rin"
-    },
-    "location": {
-      "value": "eastus"
-    },
-    "vmSize": {
-      "value": "Standard_D4s_v3"
-    },
-    "virtualNetworkName": {
-      "value": "vnet-rin"
-    },
-    "subnetName": {
-      "value": "subnet-rin"
-    },
-    "networkSecurityGroupName": {
-      "value": "nsg-rin"
-    },
-    "osDiskType": {
-      "value": "StandardSSD_LRS"
-    },
-    "imageReference": {
-      "value": {
-        "publisher": "Oracle",
-        "offer": "Oracle-Linux",
-        "sku": "8_5",
-        "version": "latest"
-      }
-    }
-  }
-}
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmName": {
+            "value": "VM-RIN"
+        },
+        "adminUsername": {
+            "value": "azureuser"
+        },
+        "authenticationType": {
+            "value": "password"
+        },
+        "adminPasswordOrKey": {
+            "value": "SuaSenhaSeguraAqui123!"
+        },
+        "dnsLabelPrefix": {
+            "value": "vm-rin"
+        },
+        "location": {
+            "value": "eastus"
+        },
+        "vmSize": {
+            "value": "Standard_D4s_v3"
+        },
+        "virtualNetworkName": {
+            "value": "vNet-RIN"
+        },
+        "subnetName": {
+            "value": "Subnet-RIN"
+        },
