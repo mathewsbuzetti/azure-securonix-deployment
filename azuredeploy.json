@@ -69,30 +69,41 @@
         },
         "virtualNetworkName": {
             "type": "string",
+            "allowedValues": [
+                "vNet",
+                "vNet-Prod",
+                "vNet-Dev",
+                "Create new"
+            ],
             "defaultValue": "vNet",
             "metadata": {
-                "description": "Name of the VNET (existing or new)"
-            }
-        },
-        "virtualNetworkResourceGroup": {
-            "type": "string",
-            "defaultValue": "[resourceGroup().name]",
-            "metadata": {
-                "description": "Name of the Resource Group containing the virtual network (if using existing)"
+                "description": "Select an existing VNet or create a new one"
             }
         },
         "subnetName": {
             "type": "string",
+            "allowedValues": [
+                "Subnet",
+                "SubnetA",
+                "SubnetB",
+                "Create new"
+            ],
             "defaultValue": "Subnet",
             "metadata": {
-                "description": "Name of the subnet in the virtual network (existing or new)"
+                "description": "Select an existing Subnet or create a new one"
             }
         },
         "networkSecurityGroupName": {
             "type": "string",
+            "allowedValues": [
+                "SecGroupNet",
+                "NSG-Prod",
+                "NSG-Dev",
+                "Create new"
+            ],
             "defaultValue": "SecGroupNet",
             "metadata": {
-                "description": "Name of the Network Security Group (existing or new)"
+                "description": "Select an existing NSG or create a new one"
             }
         },
         "networkSecurityGroupResourceGroup": {
