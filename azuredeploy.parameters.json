@@ -16,6 +16,21 @@
         },
         "dnsLabelPrefix": {
             "value": "vm-rin-dns"
+        },
+        "vmSize": {
+            "value": "Standard_D4s_v3"
+        },
+        "virtualNetworkName": {
+            "value": "vnet-rin"
+        },
+        "subnetName": {
+            "value": "subnet-rin"
+        },
+        "networkSecurityGroupName": {
+            "value": "nsg-rin"
+        },
+        "location": {
+            "value": "eastus"
         }
     }
 }
