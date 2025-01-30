@@ -60,13 +60,6 @@
                 "description": "The size of the VM"
             }
         },
-        "useExistingNetwork": {
-            "type": "bool",
-            "defaultValue": false,
-            "metadata": {
-                "description": "Set to true to use existing network resources, false to create new ones"
-            }
-        },
         "virtualNetworkName": {
             "type": "string",
             "metadata": {
@@ -154,7 +147,7 @@
                         "name": "ipconfig1",
                         "properties": {
                             "subnet": {
-                                "id": "[if(parameters('useExistingNetwork'), resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName')), reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName')), '2023-09-01').subnets[0].id)]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
                             },
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIPAddress": {
@@ -164,7 +157,7 @@
                     }
                 ],
                 "networkSecurityGroup": {
-                    "id": "[if(parameters('useExistingNetwork'), resourceId(parameters('networkSecurityGroupResourceGroup'), 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName')), resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName')))]"
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
                 }
             },
             "dependsOn": [
@@ -174,7 +167,6 @@
             ]
         },
         {
-            "condition": "[not(parameters('useExistingNetwork'))]",
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2023-09-01",
             "name": "[parameters('networkSecurityGroupName')]",
@@ -198,7 +190,6 @@
             }
         },
         {
-            "condition": "[not(parameters('useExistingNetwork'))]",
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2023-09-01",
             "name": "[parameters('virtualNetworkName')]",
