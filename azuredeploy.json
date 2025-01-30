@@ -62,7 +62,6 @@
         },
         "virtualNetworkName": {
             "type": "string",
-            "defaultValue": "vNet",
             "allowedValues": [
                 "vNet1",
                 "vNet2",
@@ -74,7 +73,6 @@
         },
         "subnetName": {
             "type": "string",
-            "defaultValue": "Subnet",
             "allowedValues": [
                 "Subnet1",
                 "Subnet2",
@@ -86,7 +84,6 @@
         },
         "networkSecurityGroupName": {
             "type": "string",
-            "defaultValue": "SecGroupNet",
             "allowedValues": [
                 "SecGroupNet1",
                 "SecGroupNet2",
@@ -98,7 +95,7 @@
         },
         "securityType": {
             "type": "string",
-            "defaultValue": "TrustedLaunch",
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "TrustedLaunch"
