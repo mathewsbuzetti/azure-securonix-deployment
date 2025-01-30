@@ -60,39 +60,25 @@
                 "description": "The size of the VM"
             }
         },
-        "useExistingNetwork": {
-            "type": "bool",
-            "defaultValue": false,
-            "metadata": {
-                "description": "Set to true to use existing network resources, false to create new ones"
-            }
-        },
         "virtualNetworkName": {
             "type": "string",
             "metadata": {
-                "description": "Virtual Network",
+                "description": "Virtual Network name",
                 "strongType": "Microsoft.Network/virtualNetworks"
             }
         },
         "subnetName": {
             "type": "string",
             "metadata": {
-                "description": "Subnet",
+                "description": "Subnet name",
                 "strongType": "Microsoft.Network/virtualNetworks/subnets"
             }
         },
         "networkSecurityGroupName": {
             "type": "string",
             "metadata": {
-                "description": "Network Security Group",
+                "description": "Network Security Group name",
                 "strongType": "Microsoft.Network/networkSecurityGroups"
-            }
-        },
-        "networkSecurityGroupResourceGroup": {
-            "type": "string",
-            "defaultValue": "[resourceGroup().name]",
-            "metadata": {
-                "description": "Name of the Resource Group containing the NSG (if using existing)"
             }
         },
         "securityType": {
@@ -144,84 +130,6 @@
     },
     "resources": [
         {
-            "type": "Microsoft.Network/networkInterfaces",
-            "apiVersion": "2023-09-01",
-            "name": "[variables('networkInterfaceName')]",
-            "location": "[parameters('location')]",
-            "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "ipconfig1",
-                        "properties": {
-                            "subnet": {
-                                "id": "[if(parameters('useExistingNetwork'), resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName')), reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName')), '2023-09-01').subnets[0].id)]"
-                            },
-                            "privateIPAllocationMethod": "Dynamic",
-                            "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
-                            }
-                        }
-                    }
-                ],
-                "networkSecurityGroup": {
-                    "id": "[if(parameters('useExistingNetwork'), resourceId(parameters('networkSecurityGroupResourceGroup'), 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName')), resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName')))]"
-                }
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]",
-                "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
-            ]
-        },
-        {
-            "condition": "[not(parameters('useExistingNetwork'))]",
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "apiVersion": "2023-09-01",
-            "name": "[parameters('networkSecurityGroupName')]",
-            "location": "[parameters('location')]",
-            "properties": {
-                "securityRules": [
-                    {
-                        "name": "SSH",
-                        "properties": {
-                            "priority": 1000,
-                            "protocol": "Tcp",
-                            "access": "Allow",
-                            "direction": "Inbound",
-                            "sourceAddressPrefix": "*",
-                            "sourcePortRange": "*",
-                            "destinationAddressPrefix": "*",
-                            "destinationPortRange": "22"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "condition": "[not(parameters('useExistingNetwork'))]",
-            "type": "Microsoft.Network/virtualNetworks",
-            "apiVersion": "2023-09-01",
-            "name": "[parameters('virtualNetworkName')]",
-            "location": "[parameters('location')]",
-            "properties": {
-                "addressSpace": {
-                    "addressPrefixes": [
-                        "[variables('addressPrefix')]"
-                    ]
-                },
-                "subnets": [
-                    {
-                        "name": "[parameters('subnetName')]",
-                        "properties": {
-                            "addressPrefix": "[variables('subnetAddressPrefix')]",
-                            "privateEndpointNetworkPolicies": "Enabled",
-                            "privateLinkServiceNetworkPolicies": "Enabled"
-                        }
-                    }
-                ]
-            }
-        },
-        {
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2023-09-01",
             "name": "[variables('publicIPAddressName')]",
@@ -237,6 +145,34 @@
                 },
                 "idleTimeoutInMinutes": 4
             }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2023-09-01",
+            "name": "[variables('networkInterfaceName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
+                            },
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
+                            }
+                        }
+                    }
+                ],
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
+            ]
         },
         {
             "type": "Microsoft.Compute/virtualMachines",
