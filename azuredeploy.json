@@ -97,8 +97,8 @@
         "imageReference": {
             "publisher": "Oracle",
             "offer": "Oracle-Linux",
-            "sku": "81-lvm-gen2",
-            "version": "latest"
+            "sku": "ol810-lvm-gen2",
+            "version": "8.10.5"
         },
         "publicIPAddressName": "[format('{0}PublicIP', parameters('vmName'))]",
         "networkInterfaceName": "[format('{0}NetInt', parameters('vmName'))]",
