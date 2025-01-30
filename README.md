@@ -118,3 +118,12 @@ Para remover todos os recursos associados:
 - 🔗 Verifique todos os parâmetros antes do deploy
 - 🛡️ Siga as melhores práticas de segurança do Azure
 - 🔧 Personalize conforme necessário para seu ambiente
+
+### Termos Principais:
+
+- 🔓 Uso livre para projetos pessoais e comerciais
+- 📝 Atribuição necessária em caso de uso ou redistribuição
+- 🚫 Proibida a venda direta do código-fonte
+- 🤝 Contribuições são bem-vindas
+
+
