@@ -25,6 +25,13 @@
 - 💾 **Armazenamento**:
   - Disco SO: 100GB StandardSSD_LRS
   - Disco Dados: 300GB Premium_LRS
+- ## Configurações LVM automáticas
+  - vg_system_swap (9.5GB) para SWAP
+  - vg_system_root (20GB) para /
+  - vg_system_tmp (10GB) para /tmp
+  - vg_system_var (10GB) para /var
+  - vg_system_home (20GB) para /home/securonix
+  - vg_system_opt (10GB) para /opt
 
 ## 🚀 Deploy
 
