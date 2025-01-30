@@ -1,13 +1,6 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "metadata": {
-        "_generator": {
-            "name": "bicep",
-            "version": "0.25.53.49325",
-            "templateHash": "2386182166504519146"
-        }
-    },
     "parameters": {
         "vmName": {
             "type": "string",
@@ -15,6 +8,42 @@
             "metadata": {
                 "description": "Nome da máquina virtual"
             }
+        },
+        "virtualNetworkResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "Nome do Resource Group da Virtual Network"
+            }
+        },
+        "virtualNetworkName": {
+            "type": "string",
+            "metadata": {
+                "description": "Nome da Virtual Network",
+                "strongType": "Microsoft.Network/virtualNetworks"
+            },
+            "defaultValue": ""
+        },
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Nome da Subnet",
+                "strongType": "subnets"
+            },
+            "defaultValue": ""
+        },
+        "networkSecurityGroupResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "Nome do Resource Group do Network Security Group"
+            }
+        },
+        "networkSecurityGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Nome do Network Security Group",
+                "strongType": "Microsoft.Network/networkSecurityGroups"
+            },
+            "defaultValue": ""
         },
         "adminUsername": {
             "type": "string",
@@ -30,20 +59,13 @@
                 "password"
             ],
             "metadata": {
-                "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+                "description": "Type of authentication to use on the Virtual Machine."
             }
         },
         "adminPasswordOrKey": {
             "type": "securestring",
             "metadata": {
-                "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
-            }
-        },
-        "dnsLabelPrefix": {
-            "type": "string",
-            "defaultValue": "[toLower(format('{0}-{1}', parameters('vmName'), uniqueString(resourceGroup().id)))]",
-            "metadata": {
-                "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+                "description": "SSH Key or password for the Virtual Machine."
             }
         },
         "location": {
@@ -60,30 +82,9 @@
                 "description": "The size of the VM"
             }
         },
-        "virtualNetworkName": {
-            "type": "string",
-            "metadata": {
-                "description": "Virtual Network name",
-                "strongType": "Microsoft.Network/virtualNetworks"
-            }
-        },
-        "subnetName": {
-            "type": "string",
-            "metadata": {
-                "description": "Subnet name",
-                "strongType": "Microsoft.Network/virtualNetworks/subnets"
-            }
-        },
-        "networkSecurityGroupName": {
-            "type": "string",
-            "metadata": {
-                "description": "Network Security Group name",
-                "strongType": "Microsoft.Network/networkSecurityGroups"
-            }
-        },
         "securityType": {
             "type": "string",
-            "defaultValue": "TrustedLaunch",
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "TrustedLaunch"
@@ -106,8 +107,6 @@
         "osDiskSizeGB": 100,
         "dataDiskType": "Premium_LRS",
         "dataDiskSizeGB": 300,
-        "subnetAddressPrefix": "10.1.0.0/24",
-        "addressPrefix": "10.1.0.0/16",
         "linuxConfiguration": {
             "disablePasswordAuthentication": true,
             "ssh": {
@@ -141,9 +140,8 @@
                 "publicIPAllocationMethod": "Dynamic",
                 "publicIPAddressVersion": "IPv4",
                 "dnsSettings": {
-                    "domainNameLabel": "[parameters('dnsLabelPrefix')]"
-                },
-                "idleTimeoutInMinutes": 4
+                    "domainNameLabel": "[toLower(parameters('vmName'))]"
+                }
             }
         },
         {
@@ -157,7 +155,7 @@
                         "name": "ipconfig1",
                         "properties": {
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
+                                "id": "[concat(subscription().id,'/resourceGroups/',parameters('virtualNetworkResourceGroup'),'/providers/Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'),'/subnets/',parameters('subnetName'))]"
                             },
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIPAddress": {
@@ -167,7 +165,7 @@
                     }
                 ],
                 "networkSecurityGroup": {
-                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+                    "id": "[concat(subscription().id,'/resourceGroups/',parameters('networkSecurityGroupResourceGroup'),'/providers/Microsoft.Network/networkSecurityGroups/',parameters('networkSecurityGroupName'))]"
                 }
             },
             "dependsOn": [
