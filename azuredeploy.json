@@ -14,6 +14,13 @@
                 "description": "Nome da máquina virtual"
             }
         },
+        "vmSize": {
+            "type": "string",
+            "defaultValue": "Standard_D4s_v3",
+            "metadata": {
+                "description": "Tamanho da VM"
+            }
+        },
         "adminUsername": {
             "type": "string",
             "metadata": {
@@ -44,22 +51,79 @@
                 "description": "Nome DNS único"
             }
         },
+        "virtualNetworkName": {
+            "type": "string",
+            "defaultValue": "vnet-rin",
+            "metadata": {
+                "description": "Nome da Rede Virtual"
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "defaultValue": "subnet-rin",
+            "metadata": {
+                "description": "Nome da Subnet"
+            }
+        },
+        "networkSecurityGroupName": {
+            "type": "string",
+            "defaultValue": "nsg-rin",
+            "metadata": {
+                "description": "Nome do Grupo de Segurança de Rede"
+            }
+        },
+        "securityType": {
+            "type": "string",
+            "defaultValue": "Standard",
+            "allowedValues": [
+                "Standard",
+                "TrustedLaunch"
+            ],
+            "metadata": {
+                "description": "Tipo de segurança da VM"
+            }
+        },
         "location": {
             "type": "string",
             "defaultValue": "[resourceGroup().location]",
             "metadata": {
-                "description": "Localização para todos os recursos"
+                "description": "Localização dos recursos"
+            }
+        },
+        "osDiskType": {
+            "type": "string",
+            "defaultValue": "StandardSSD_LRS",
+            "metadata": {
+                "description": "Tipo do disco do sistema operacional"
+            }
+        },
+        "osDiskSizeGB": {
+            "type": "int",
+            "defaultValue": 100,
+            "metadata": {
+                "description": "Tamanho do disco do sistema operacional em GB"
+            }
+        },
+        "dataDiskType": {
+            "type": "string",
+            "defaultValue": "Premium_LRS",
+            "metadata": {
+                "description": "Tipo do disco de dados"
+            }
+        },
+        "dataDiskSizeGB": {
+            "type": "int",
+            "defaultValue": 300,
+            "metadata": {
+                "description": "Tamanho do disco de dados em GB"
             }
         }
     },
     "variables": {
         "nicName": "[format('{0}-nic', parameters('vmName'))]",
         "addressPrefix": "10.0.0.0/16",
-        "subnetName": "default",
         "subnetPrefix": "10.0.0.0/24",
         "publicIPAddressName": "[format('{0}-ip', parameters('vmName'))]",
-        "networkSecurityGroupName": "[format('{0}-nsg', parameters('vmName'))]",
-        "virtualNetworkName": "[format('{0}-vnet', parameters('vmName'))]",
         "osDiskName": "[format('{0}-osdisk', parameters('vmName'))]",
         "dataDiskName": "[format('{0}-datadisk', parameters('vmName'))]",
         "linuxConfiguration": {
@@ -73,12 +137,19 @@
                 ]
             }
         },
-        "customData": "#!/bin/bash\n\n# Aguarda o disco ficar disponível\nwhile [ ! -b /dev/sdc ]; do\n    sleep 1\ndone\n\n# Inicializa o disco\npvcreate /dev/sdc\n\n# Cria grupo de volumes\nvgcreate vg_system /dev/sdc\n\n# Cria volumes lógicos\nlvcreate -L 9.5G -n vg_system_swap vg_system\nlvcreate -L 20G -n vg_system_root vg_system\nlvcreate -L 10G -n vg_system_tmp vg_system\nlvcreate -L 10G -n vg_system_var vg_system\nlvcreate -L 20G -n vg_system_home vg_system\nlvcreate -L 10G -n vg_system_opt vg_system\n\n# Formata os volumes\nmkswap /dev/vg_system/vg_system_swap\nmkfs.xfs /dev/vg_system/vg_system_root\nmkfs.xfs /dev/vg_system/vg_system_tmp\nmkfs.xfs /dev/vg_system/vg_system_var\nmkfs.xfs /dev/vg_system/vg_system_home\nmkfs.xfs /dev/vg_system/vg_system_opt\n\n# Cria pontos de montagem\nmkdir -p /mnt/root\nmkdir -p /mnt/tmp\nmkdir -p /mnt/var\nmkdir -p /mnt/home/securonix\nmkdir -p /mnt/opt\n\n# Monta os volumes\nmount /dev/vg_system/vg_system_root /mnt/root\nmount /dev/vg_system/vg_system_tmp /mnt/tmp\nmount /dev/vg_system/vg_system_var /mnt/var\nmount /dev/vg_system/vg_system_home /mnt/home/securonix\nmount /dev/vg_system/vg_system_opt /mnt/opt\n\n# Adiciona entradas ao fstab\necho '/dev/vg_system/vg_system_swap swap swap defaults 0 0' >> /etc/fstab\necho '/dev/vg_system/vg_system_root /root xfs defaults 0 0' >> /etc/fstab\necho '/dev/vg_system/vg_system_tmp /tmp xfs defaults 0 0' >> /etc/fstab\necho '/dev/vg_system/vg_system_var /var xfs defaults 0 0' >> /etc/fstab\necho '/dev/vg_system/vg_system_home /home/securonix xfs defaults 0 0' >> /etc/fstab\necho '/dev/vg_system/vg_system_opt /opt xfs defaults 0 0' >> /etc/fstab\n\n# Ativa a swap\nswapon /dev/vg_system/vg_system_swap"
+        "securityProfileJson": {
+            "uefiSettings": {
+                "secureBootEnabled": true,
+                "vTpmEnabled": true
+            },
+            "securityType": "[parameters('securityType')]"
+        },
+        "customData": "#!/bin/bash\n\n# Aguarda o disco ficar disponível\nwhile [ ! -b /dev/sdb ]; do\n    sleep 1\ndone\n\n# Inicializa o disco\npvcreate /dev/sdb\n\n# Cria grupo de volumes\nvgcreate vg_system /dev/sdb\n\n# Cria volumes lógicos\nlvcreate -L 9.5G -n vg_system_swap vg_system\nlvcreate -L 20G -n vg_system_root vg_system\nlvcreate -L 10G -n vg_system_tmp vg_system\nlvcreate -L 10G -n vg_system_var vg_system\nlvcreate -L 20G -n vg_system_home vg_system\nlvcreate -L 10G -n vg_system_opt vg_system\n\n# Formata os volumes\nmkswap /dev/vg_system/vg_system_swap\nmkfs.xfs /dev/vg_system/vg_system_root\nmkfs.xfs /dev/vg_system/vg_system_tmp\nmkfs.xfs /dev/vg_system/vg_system_var\nmkfs.xfs /dev/vg_system/vg_system_home\nmkfs.xfs /dev/vg_system/vg_system_opt\n\n# Cria pontos de montagem\nmkdir -p /mnt/root\nmkdir -p /mnt/tmp\nmkdir -p /mnt/var\nmkdir -p /mnt/home/securonix\nmkdir -p /mnt/opt\n\n# Monta os volumes\nmount /dev/vg_system/vg_system_root /mnt/root\nmount /dev/vg_system/vg_system_tmp /mnt/tmp\nmount /dev/vg_system/vg_system_var /mnt/var\nmount /dev/vg_system/vg_system_home /mnt/home/securonix\nmount /dev/vg_system/vg_system_opt /mnt/opt\n\n# Adiciona entradas ao fstab\necho '/dev/vg_system/vg_system_swap swap swap defaults 0 0' >> /etc/fstab\necho '/dev/vg_system/vg_system_root /root xfs defaults 0 0' >> /etc/fstab\necho '/dev/vg_system/vg_system_tmp /tmp xfs defaults 0 0' >> /etc/fstab\necho '/dev/vg_system/vg_system_var /var xfs defaults 0 0' >> /etc/fstab\necho '/dev/vg_system/vg_system_home /home/securonix xfs defaults 0 0' >> /etc/fstab\necho '/dev/vg_system/vg_system_opt /opt xfs defaults 0 0' >> /etc/fstab\n\n# Ativa a swap\nswapon /dev/vg_system/vg_system_swap"
     },
     "resources": [
         {
             "type": "Microsoft.Network/publicIPAddresses",
-            "apiVersion": "2023-09-01",
+            "apiVersion": "2021-02-01",
             "name": "[variables('publicIPAddressName')]",
             "location": "[parameters('location')]",
             "sku": {
@@ -93,8 +164,8 @@
         },
         {
             "type": "Microsoft.Network/networkSecurityGroups",
-            "apiVersion": "2023-09-01",
-            "name": "[variables('networkSecurityGroupName')]",
+            "apiVersion": "2021-02-01",
+            "name": "[parameters('networkSecurityGroupName')]",
             "location": "[parameters('location')]",
             "properties": {
                 "securityRules": [
@@ -116,8 +187,8 @@
         },
         {
             "type": "Microsoft.Network/virtualNetworks",
-            "apiVersion": "2023-09-01",
-            "name": "[variables('virtualNetworkName')]",
+            "apiVersion": "2021-02-01",
+            "name": "[parameters('virtualNetworkName')]",
             "location": "[parameters('location')]",
             "properties": {
                 "addressSpace": {
@@ -127,23 +198,23 @@
                 },
                 "subnets": [
                     {
-                        "name": "[variables('subnetName')]",
+                        "name": "[parameters('subnetName')]",
                         "properties": {
                             "addressPrefix": "[variables('subnetPrefix')]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
                             }
                         }
                     }
                 ]
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
             ]
         },
         {
             "type": "Microsoft.Network/networkInterfaces",
-            "apiVersion": "2023-09-01",
+            "apiVersion": "2021-02-01",
             "name": "[variables('nicName')]",
             "location": "[parameters('location')]",
             "properties": {
@@ -156,7 +227,7 @@
                                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
                             },
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
                             }
                         }
                     }
@@ -164,17 +235,17 @@
             },
             "dependsOn": [
                 "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
             ]
         },
         {
             "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "2023-09-01",
+            "apiVersion": "2021-03-01",
             "name": "[parameters('vmName')]",
             "location": "[parameters('location')]",
             "properties": {
                 "hardwareProfile": {
-                    "vmSize": "Standard_D4s_v3"
+                    "vmSize": "[parameters('vmSize')]"
                 },
                 "osProfile": {
                     "computerName": "[parameters('vmName')]",
@@ -194,18 +265,18 @@
                         "name": "[variables('osDiskName')]",
                         "createOption": "FromImage",
                         "managedDisk": {
-                            "storageAccountType": "StandardSSD_LRS"
+                            "storageAccountType": "[parameters('osDiskType')]"
                         },
-                        "diskSizeGB": 100
+                        "diskSizeGB": "[parameters('osDiskSizeGB')]"
                     },
                     "dataDisks": [
                         {
                             "name": "[variables('dataDiskName')]",
-                            "diskSizeGB": 300,
+                            "diskSizeGB": "[parameters('dataDiskSizeGB')]",
                             "lun": 0,
                             "createOption": "Empty",
                             "managedDisk": {
-                                "storageAccountType": "Premium_LRS"
+                                "storageAccountType": "[parameters('dataDiskType')]"
                             }
                         }
                     ]
@@ -216,7 +287,8 @@
                             "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
                         }
                     ]
-                }
+                },
+                "securityProfile": "[if(equals(parameters('securityType'), 'TrustedLaunch'), variables('securityProfileJson'), null())]"
             },
             "dependsOn": [
                 "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
