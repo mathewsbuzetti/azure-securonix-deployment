@@ -80,17 +80,6 @@
             "metadata": {
                 "description": "Name of the Network Security Group"
             }
-        },
-        "securityType": {
-            "type": "string",
-            "defaultValue": "TrustedLaunch",
-            "allowedValues": [
-                "Standard",
-                "TrustedLaunch"
-            ],
-            "metadata": {
-                "description": "Security Type of the Virtual Machine."
-            }
         }
     },
     "variables": {
@@ -119,14 +108,7 @@
                 ]
             }
         },
-        "securityProfileJson": {
-            "uefiSettings": {
-                "secureBootEnabled": true,
-                "vTpmEnabled": true
-            },
-            "securityType": "[parameters('securityType')]"
-        },
-        "customData": "#!/bin/bash\n\n# Aguarda o disco ficar disponível\nwhile [ ! -b /dev/sda ]; do\n    sleep 1\ndone\n\n# Desmonta e limpa configurações existentes\nswapoff -a || true\nvgremove -f rootvg || true\n\n# Cria novo volume group\npvcreate /dev/sda2\nvgcreate vg_system /dev/sda2\n\n# Cria os volumes lógicos com os tamanhos especificados\nlvcreate -L 9.5G -n vg_system_swap vg_system\nlvcreate -L 20G -n vg_system_root vg_system\nlvcreate -L 10G -n vg_system_tmp vg_system\nlvcreate -L 10G -n vg_system_var vg_system\nlvcreate -L 20G -n vg_system_home vg_system\nlvcreate -L 10G -n vg_system_opt vg_system\n\n# Formata os volumes\nmkswap /dev/vg_system/vg_system_swap\nmkfs.xfs /dev/vg_system/vg_system_root\nmkfs.xfs /dev/vg_system/vg_system_tmp\nmkfs.xfs /dev/vg_system/vg_system_var\nmkfs.xfs /dev/vg_system/vg_system_home\nmkfs.xfs /dev/vg_system/vg_system_opt\n\n# Monta os volumes\nmount /dev/vg_system/vg_system_root /\nmount /dev/vg_system/vg_system_tmp /tmp\nmount /dev/vg_system/vg_system_var /var\nmount /dev/vg_system/vg_system_home /home/securonix\nmount /dev/vg_system/vg_system_opt /opt\n\n# Configura o fstab\ncat > /etc/fstab << EOL\n/dev/vg_system/vg_system_root / xfs defaults 0 0\n/dev/vg_system/vg_system_swap swap swap defaults 0 0\n/dev/vg_system/vg_system_tmp /tmp xfs defaults 0 0\n/dev/vg_system/vg_system_var /var xfs defaults 0 0\n/dev/vg_system/vg_system_home /home/securonix xfs defaults 0 0\n/dev/vg_system/vg_system_opt /opt xfs defaults 0 0\n/dev/sda1 /boot xfs defaults 0 0\n/dev/sda15 /boot/efi vfat defaults 0 0\nEOL\n\n# Ativa a swap\nswapon /dev/vg_system/vg_system_swap"
+        "customData": "#!/bin/bash\n\n# Configurar LVM no disco SO\npvcreate /dev/sda2\nvgcreate vg_system /dev/sda2\n\n# Criar volumes logicos\nlvcreate -L 9.5G -n vg_system_swap vg_system\nlvcreate -L 20G -n vg_system_root vg_system\nlvcreate -L 10G -n vg_system_tmp vg_system\nlvcreate -L 10G -n vg_system_var vg_system\nlvcreate -L 20G -n vg_system_home vg_system\nlvcreate -L 10G -n vg_system_opt vg_system\n\n# Formatar volumes\nmkswap /dev/vg_system/vg_system_swap\nmkfs.xfs /dev/vg_system/vg_system_root\nmkfs.xfs /dev/vg_system/vg_system_tmp\nmkfs.xfs /dev/vg_system/vg_system_var\nmkfs.xfs /dev/vg_system/vg_system_home\nmkfs.xfs /dev/vg_system/vg_system_opt\n\n# Montar volumes\nmount /dev/vg_system/vg_system_root /\nmount /dev/vg_system/vg_system_tmp /tmp\nmount /dev/vg_system/vg_system_var /var\nmount /dev/vg_system/vg_system_home /home/securonix\nmount /dev/vg_system/vg_system_opt /opt\n\n# Configurar fstab\ncat > /etc/fstab << EOL\n/dev/vg_system/vg_system_root / xfs defaults 0 0\n/dev/vg_system/vg_system_swap swap swap defaults 0 0\n/dev/vg_system/vg_system_tmp /tmp xfs defaults 0 0\n/dev/vg_system/vg_system_var /var xfs defaults 0 0\n/dev/vg_system/vg_system_home /home/securonix xfs defaults 0 0\n/dev/vg_system/vg_system_opt /opt xfs defaults 0 0\nEOL\n\n# Ativar swap\nswapon /dev/vg_system/vg_system_swap"
     },
     "resources": [
         {
@@ -237,7 +219,12 @@
                         "managedDisk": {
                             "storageAccountType": "[variables('osDiskType')]"
                         },
-                        "diskSizeGB": "[variables('osDiskSizeGB')]"
+                        "diskSizeGB": "[variables('osDiskSizeGB')]",
+                        "diffDiskSettings": {
+                            "option": "Local",
+                            "placement": "ResourceDisk"
+                        },
+                        "caching": "ReadOnly"
                     },
                     "imageReference": "[variables('imageReference')]",
                     "dataDisks": [
@@ -265,8 +252,7 @@
                     "adminPassword": "[parameters('adminPasswordOrKey')]",
                     "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), null(), variables('linuxConfiguration'))]",
                     "customData": "[base64(variables('customData'))]"
-                },
-                "securityProfile": "[if(equals(parameters('securityType'), 'TrustedLaunch'), variables('securityProfileJson'), null())]"
+                }
             },
             "dependsOn": [
                 "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
