@@ -1,13 +1,6 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "metadata": {
-        "_generator": {
-            "name": "bicep",
-            "version": "0.25.53.49325",
-            "templateHash": "2386182166504519146"
-        }
-    },
     "parameters": {
         "vmName": {
             "type": "string",
@@ -108,7 +101,7 @@
                 ]
             }
         },
-        "customData": "#!/bin/bash\n\n# Configuração do disco do SO\npvcreate /dev/sda3\nvgextend centos /dev/sda3\nlvextend -L +100GB /dev/mapper/centos-root\nxfs_growfs /\n\n# Configuração do disco de dados\nparted --script /dev/sdb mklabel gpt\nparted --script /dev/sdb mkpart primary 0% 100%\npvcreate /dev/sdb1\nvgcreate --physicalextentsize 32 vg_scnx /dev/sdb1\nlvcreate --extents 100%FREE vg_scnx --name securonix --yes\nmkdir /Securonix\nmkfs.xfs -q /dev/vg_scnx/securonix\n\n# Configurar montagem automática\necho '/dev/vg_scnx/securonix /Securonix xfs defaults 0 0' >> /etc/fstab\nmount -a"
+        "customData": "#!/bin/bash\n\n# Aguarda dispositivos\nwhile [ ! -b /dev/sda ]; do\n    sleep 1\ndone\n\n# Limpa e cria partições SO\nparted /dev/sda mklabel gpt\nparted /dev/sda mkpart primary xfs 1MiB 1GiB\nparted /dev/sda mkpart primary 1GiB 20GiB\nparted /dev/sda mkpart primary 20GiB 100%\n\n# Configura LVM inicial\npvcreate /dev/sda2\nvgcreate centos /dev/sda2\nlvcreate -L 2G -n swap centos\nlvcreate -L 117G -n root centos\n\n# Configura extensão LVM\npvcreate /dev/sda3\nvgextend centos /dev/sda3\nlvextend -L +117G /dev/centos/root\n\n# Formata sistemas de arquivos SO\nmkfs.xfs /dev/sda1\nmkswap /dev/centos/swap\nmkfs.xfs /dev/centos/root\n\n# Monta sistemas de arquivos SO\nmount /dev/centos/root /\nmkdir /boot\nmount /dev/sda1 /boot\n\n# Configura fstab para SO\necho '/dev/centos/root / xfs defaults 0 0' > /etc/fstab\necho '/dev/sda1 /boot xfs defaults 0 0' >> /etc/fstab\necho '/dev/centos/swap swap swap defaults 0 0' >> /etc/fstab\n\n# Ativa swap\nswapon /dev/centos/swap\n\n# Aguarda disco de dados\nwhile [ ! -b /dev/sdb ]; do\n    sleep 1\ndone\n\n# Configura disco de dados\nparted --script /dev/sdb mklabel gpt\nparted --script /dev/sdb mkpart primary 0% 100%\npvcreate /dev/sdb1\nvgcreate --physicalextentsize 32 vg_scnx /dev/sdb1\nlvcreate --extents 100%FREE vg_scnx --name securonix --yes\nmkdir /Securonix\nmkfs.xfs -q /dev/vg_scnx/securonix\necho '/dev/vg_scnx/securonix /Securonix xfs defaults 0 0' >> /etc/fstab\nmount -a"
     },
     "resources": [
         {
