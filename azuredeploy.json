@@ -84,20 +84,31 @@
     },
     "variables": {
         "imageReference": {
-            "publisher": "Oracle",
-            "offer": "Oracle-Linux",
-            "sku": "ol810-lvm-gen2",
-            "version": "8.10.5"
+            "publisher": "OpenLogic",
+            "offer": "CentOS",
+            "sku": "7_9",
+            "version": "latest"
         },
         "publicIPAddressName": "[format('{0}PublicIP', parameters('vmName'))]",
         "networkInterfaceName": "[format('{0}NetInt', parameters('vmName'))]",
         "osDiskType": "StandardSSD_LRS",
-        "osDiskSizeGB": 128,
+        "osDiskSizeGB": 256,
         "dataDiskType": "Premium_LRS",
-        "dataDiskSizeGB": 256,
+        "dataDiskSizeGB": 300,
         "subnetAddressPrefix": "10.1.0.0/24",
         "addressPrefix": "10.1.0.0/16",
-        "customData": "#!/bin/bash\n\n# Remove LVM existente\nswapoff -a\nvgremove -f rootvg\npvremove /dev/sda2\n\n# Cria novo volume group\npvcreate /dev/sda2\nvgcreate vg_system /dev/sda2\n\n# Cria volumes logicos\nlvcreate -L 9.5G -n vg_system_swap vg_system\nlvcreate -L 20G -n vg_system_root vg_system\nlvcreate -L 10G -n vg_system_tmp vg_system\nlvcreate -L 10G -n vg_system_var vg_system\nlvcreate -L 20G -n vg_system_home vg_system\nlvcreate -L 10G -n vg_system_opt vg_system\n\n# Formata volumes\nmkswap /dev/vg_system/vg_system_swap\nmkfs.xfs /dev/vg_system/vg_system_root\nmkfs.xfs /dev/vg_system/vg_system_tmp\nmkfs.xfs /dev/vg_system/vg_system_var\nmkfs.xfs /dev/vg_system/vg_system_home\nmkfs.xfs /dev/vg_system/vg_system_opt\n\n# Monta volumes\nmount /dev/vg_system/vg_system_root /\nmount /dev/vg_system/vg_system_tmp /tmp\nmount /dev/vg_system/vg_system_var /var\nmount /dev/vg_system/vg_system_home /home/securonix\nmount /dev/vg_system/vg_system_opt /opt\n\n# Configura fstab\ncat > /etc/fstab << 'EOF'\n/dev/vg_system/vg_system_root / xfs defaults 0 0\n/dev/vg_system/vg_system_swap swap swap defaults 0 0\n/dev/vg_system/vg_system_tmp /tmp xfs defaults 0 0\n/dev/vg_system/vg_system_var /var xfs defaults 0 0\n/dev/vg_system/vg_system_home /home/securonix xfs defaults 0 0\n/dev/vg_system/vg_system_opt /opt xfs defaults 0 0\n/dev/sda1 /boot xfs defaults 0 0\nEOF\n\n# Ativa swap\nswapon /dev/vg_system/vg_system_swap"
+        "linuxConfiguration": {
+            "disablePasswordAuthentication": true,
+            "ssh": {
+                "publicKeys": [
+                    {
+                        "path": "[format('/home/{0}/.ssh/authorized_keys', parameters('adminUsername'))]",
+                        "keyData": "[parameters('adminPasswordOrKey')]"
+                    }
+                ]
+            }
+        },
+        "customData": "#!/bin/bash\n\n# Configuração do disco do SO\npvcreate /dev/sda3\nvgextend centos /dev/sda3\nlvextend -L +100GB /dev/mapper/centos-root\nxfs_growfs /\n\n# Configuração do disco de dados\nparted --script /dev/sdb mklabel gpt\nparted --script /dev/sdb mkpart primary 0% 100%\npvcreate /dev/sdb1\nvgcreate --physicalextentsize 32 vg_scnx /dev/sdb1\nlvcreate --extents 100%FREE vg_scnx --name securonix --yes\nmkdir /Securonix\nmkfs.xfs -q /dev/vg_scnx/securonix\n\n# Configurar montagem automática\necho '/dev/vg_scnx/securonix /Securonix xfs defaults 0 0' >> /etc/fstab\nmount -a"
     },
     "resources": [
         {
@@ -201,6 +212,7 @@
                     "computerName": "[parameters('vmName')]",
                     "adminUsername": "[parameters('adminUsername')]",
                     "adminPassword": "[parameters('adminPasswordOrKey')]",
+                    "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), null(), variables('linuxConfiguration'))]",
                     "customData": "[base64(variables('customData'))]"
                 },
                 "storageProfile": {
