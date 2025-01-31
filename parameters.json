@@ -31,9 +31,6 @@
         },
         "networkSecurityGroupName": {
             "value": "nsg-RIN"
-        },
-        "securityType": {
-            "value": "Standard"
         }
     }
 }
