@@ -143,6 +143,10 @@ sudo parted /dev/sda disk_set pmbr_boot on
 ```
 *Substitua `sda` pela letra do seu disco do sistema*
 
+- Responda "Fix" se perguntado
+- Pressione ENTER para "Flag to Invert"
+- Digite "on" para new state
+
 2. Redimensionamento da partição:
 ```bash
 sudo parted /dev/sda resizepart 2 95%
