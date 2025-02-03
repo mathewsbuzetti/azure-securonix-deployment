@@ -251,3 +251,13 @@ sdb                     32G disk
 ## 📝 Licença
 
 Uso livre para projetos pessoais e comerciais. Atribuição necessária em caso de uso ou redistribuição.
+
+
+#### 1.1 Ajuste da Partição Principal
+```bash
+sudo parted /dev/<font color="red">sda</font> disk_set pmbr_boot on
+```
+- Responda "Fix" se solicitado
+- Pressione ENTER para "Flag to Invert"
+- Digite "on" para novo estado
+
