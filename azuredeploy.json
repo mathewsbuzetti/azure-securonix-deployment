@@ -62,23 +62,23 @@
         },
         "virtualNetworkName": {
             "type": "string",
+            "defaultValue": "vNet",
             "metadata": {
-                "description": "Name of the VNET",
-                "strongType": "Microsoft.Network/virtualNetworks"
+                "description": "Name of the VNET"
             }
         },
         "subnetName": {
             "type": "string",
+            "defaultValue": "Subnet",
             "metadata": {
-                "description": "Name of the subnet in the virtual network",
-                "strongType": "subnets"
+                "description": "Name of the subnet in the virtual network"
             }
         },
         "networkSecurityGroupName": {
             "type": "string",
+            "defaultValue": "SecGroupNet",
             "metadata": {
-                "description": "Name of the Network Security Group",
-                "strongType": "Microsoft.Network/networkSecurityGroups"
+                "description": "Name of the Network Security Group"
             }
         },
         "securityType": {
@@ -125,7 +125,8 @@
                 "vTpmEnabled": true
             },
             "securityType": "[parameters('securityType')]"
-        }
+        },
+        "customData": "#!/bin/bash\n\n# Função para verificar erros\ncheck_error() {\n    if [ $? -ne 0 ]; then\n        echo \"Erro: $1\"\n        exit 1\n    fi\n}\n\n# Função para identificar o disco de dados\nfind_data_disk() {\n    # Lista todos os discos, exclui sda e loops, e pega o primeiro disponível\n    DATA_DISK=$(lsblk -dpn -o NAME | grep -v \"sda\\|loop\" | head -n1)\n    if [ -z \"$DATA_DISK\" ]; then\n        echo \"Erro: Não foi possível encontrar o disco de dados\"\n        exit 1\n    fi\n    echo $DATA_DISK\n}\n\necho \"Aguardando discos ficarem disponíveis...\"\nwhile [ ! -b /dev/sda ]; do\n    sleep 1\ndone\n\n# Configuração do disco do sistema (sda)\necho \"1. Redimensionando a partição do sistema...\"\nparted /dev/sda disk_set pmbr_boot on\ncheck_error \"Falha ao configurar pmbr_boot\"\n\nparted /dev/sda resizepart 2 95%\ncheck_error \"Falha ao redimensionar partição sda2\"\n\npvresize /dev/sda2\ncheck_error \"Falha ao redimensionar volume físico sda2\"\n\n# Criar volumes lógicos\nlvcreate -L 9.5G -n rootvg_swap rootvg\ncheck_error \"Falha ao criar volume swap\"\n\nlvcreate -L 10G -n rootvg_tmp rootvg\ncheck_error \"Falha ao criar volume tmp\"\n\nlvcreate -L 10G -n rootvg_var rootvg\ncheck_error \"Falha ao criar volume var\"\n\nlvcreate -L 20G -n rootvg_home rootvg\ncheck_error \"Falha ao criar volume home\"\n\nlvcreate -L 10G -n rootvg_opt rootvg\ncheck_error \"Falha ao criar volume opt\"\n\n# Formatar volumes\nmkswap /dev/rootvg/rootvg_swap\ncheck_error \"Falha ao formatar swap\"\n\nmkfs.xfs -f /dev/rootvg/rootvg_tmp\ncheck_error \"Falha ao formatar tmp\"\n\nmkfs.xfs -f /dev/rootvg/rootvg_var\ncheck_error \"Falha ao formatar var\"\n\nmkfs.xfs -f /dev/rootvg/rootvg_home\ncheck_error \"Falha ao formatar home\"\n\nmkfs.xfs -f /dev/rootvg/rootvg_opt\ncheck_error \"Falha ao formatar opt\"\n\n# Criar diretórios\nmkdir -p /tmp\nmkdir -p /var\nmkdir -p /home/securonix\nmkdir -p /opt\n\n# Configurar fstab para volumes do sistema\ncat << EOF >> /etc/fstab\n/dev/rootvg/rootvg_swap swap swap defaults 0 0\n/dev/rootvg/rootvg_tmp /tmp xfs defaults 0 0\n/dev/rootvg/rootvg_var /var xfs defaults 0 0\n/dev/rootvg/rootvg_home /home/securonix xfs defaults 0 0\n/dev/rootvg/rootvg_opt /opt xfs defaults 0 0\nEOF\n\n# Aguardar o segundo disco ficar disponível\nwhile [ ! -e $(find_data_disk) ]; do\n    sleep 1\ndone\n\n# Configurar disco de dados\necho \"Configurando disco de dados...\"\nDATA_DISK=$(find_data_disk)\necho \"Disco de dados encontrado: $DATA_DISK\"\n\nparted --script $DATA_DISK mklabel gpt\ncheck_error \"Falha ao criar tabela GPT\"\n\nparted --script $DATA_DISK mkpart primary 0% 100%\ncheck_error \"Falha ao criar partição\"\n\nsleep 2\n\nPARTITION=\"${DATA_DISK}1\"\npvcreate $PARTITION\ncheck_error \"Falha ao criar PV\"\n\nvgcreate --physicalextentsize 32 vg_scnx $PARTITION\ncheck_error \"Falha ao criar VG\"\n\nlvcreate --extents 100%FREE vg_scnx --name securonix --yes\ncheck_error \"Falha ao criar LV\"\n\nmkdir -p /Securonix\ncheck_error \"Falha ao criar diretório\"\n\nmkfs.xfs -f /dev/vg_scnx/securonix\ncheck_error \"Falha ao formatar volume\"\n\necho \"/dev/vg_scnx/securonix /Securonix xfs defaults 0 0\" >> /etc/fstab\n\n# Montar todos os volumes\nmount -a\ncheck_error \"Falha ao montar volumes\"\n\nswapon -a\ncheck_error \"Falha ao ativar swap\"\n\n# Recarregar systemd\nsystemctl daemon-reload\ncheck_error \"Falha ao recarregar systemd\"\n\necho \"Configuração concluída com sucesso!\"\ndf -h"
     },
     "resources": [
         {
@@ -262,7 +263,8 @@
                     "computerName": "[parameters('vmName')]",
                     "adminUsername": "[parameters('adminUsername')]",
                     "adminPassword": "[parameters('adminPasswordOrKey')]",
-                    "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), null(), variables('linuxConfiguration'))]"
+                    "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), null(), variables('linuxConfiguration'))]",
+                    "customData": "[base64(variables('customData'))]"
                 },
                 "securityProfile": "[if(equals(parameters('securityType'), 'TrustedLaunch'), variables('securityProfileJson'), null())]"
             },
