@@ -130,14 +130,6 @@ sudo lvextend -L 20G /dev/rootvg/rootlv
 sudo xfs_growfs /
 ```
 
-**Exemplo prático:**
-- Se seu disco do sistema for `sdb`, use:
-  ```bash
-  sudo parted /dev/sdb disk_set pmbr_boot on
-  sudo parted /dev/sdb resizepart 2 95%
-  sudo pvresize /dev/sdb2
-  ```
-
 #### 3. Criação de Volumes Lógicos
 
 ```bash
