@@ -127,6 +127,8 @@
             "securityType": "[parameters('securityType')]"
         },
         "customData": "#!/bin/bash\n\n# Aguarda o disco ficar disponível\nwhile [ ! -b /dev/sdb ]; do\n    sleep 1\ndone\n\n# Cria tabela de partição GPT\nparted --script /dev/sdb mklabel gpt\n\n# Cria partição primária usando todo o espaço disponível\nparted --script /dev/sdb mkpart primary 0% 100%\n\n# Inicializa o volume físico\npvcreate /dev/sdb1\n\n# Cria grupo de volumes com tamanho de extensão física de 32\nvgcreate --physicalextentsize 32 vg_scnx /dev/sdb1\n\n# Cria volume lógico usando todo o espaço disponível\nlvcreate --extents 100%FREE vg_scnx --name securonix --yes\n\n# Cria diretório de montagem\nmkdir /Securonix\n\n# Formata o volume com XFS\nmkfs.xfs -q /dev/vg_scnx/securonix\n\n# Adiciona entrada ao fstab\necho '/dev/vg_scnx/securonix /Securonix xfs defaults 0 0' >> /etc/fstab\n\n# Monta o volume\nmount /dev/vg_scnx/securonix /Securonix"
+    },
+    "resources": [
         {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2023-09-01",
