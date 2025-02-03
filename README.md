@@ -33,6 +33,25 @@ Este template ARM (Azure Resource Manager) oferece uma implantação otimizada d
 - **Configuração de Armazenamento**:
   - Disco SO: 128GB StandardSSD_LRS
   - Disco de Dados: 300GB Premium_LRS
+- **Estrutura Final Esperada Após Configuração**:
+
+```
+sda                  128G disk
+├─sda1               800M part /boot
+├─sda2               120.3G part
+  ├─rootvg-rootlv      20G lvm /
+  ├─rootvg-crashlv     10G lvm /var/crash
+  ├─rootvg-rootvg_swap 9.5G lvm [SWAP]
+  ├─rootvg-rootvg_tmp  10G lvm /tmp
+  ├─rootvg-rootvg_var  10G lvm /var
+  ├─rootvg-rootvg_home 20G lvm /home/securonix
+  └─rootvg-rootvg_opt  10G lvm /opt
+sdb                   32G disk
+└─sdb1                32G part /mnt
+sdc                  300G disk
+└─sdc1               300G part
+  └─vg_scnx-securonix 300G lvm /Securonix
+```
 
 ## 🚀 Opções de Implantação
 
