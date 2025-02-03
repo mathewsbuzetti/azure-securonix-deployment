@@ -45,7 +45,7 @@ Caso já tenha provisionado a máquina manualmente no portal do Azure, siga as i
 
 ## 📦 Configuração Pós-Implantação
 
-### Montagem da Partição
+## Particionamento do Disco LVM 
 
 ```
 ├─rootvg-rootvg_swap 9.5G lvm   [SWAP]
@@ -55,16 +55,16 @@ Caso já tenha provisionado a máquina manualmente no portal do Azure, siga as i
 └─rootvg-rootvg_opt  10G  lvm   /opt
 ```
 
-### Aumento do Volume da Partição
+## Expansão da Partição
+O volume root (rootlv) é expandido para 20GB:
 
 ```
 ├─rootvg-rootlv      20G  lvm   /
 ```
 
-### Observações Importantes
-
-- O sistema já vem com rootlv e crashlv configurados
-- As letras dos discos (**sda**, sdb, **sdc**) podem variar em cada ambiente
+Principais pontos:
+- Partições de swap, tmp, var, home e opt
+- Volume root expandido para 20GB
 
 ### Identificação dos Discos
 
