@@ -30,9 +30,8 @@ Aplica-se a: ✔️ VMs Linux
    * Assinatura
    * Grupo de Recursos
    * Região
-   * Nome de Usuário Administrador
+   * Nome de Usuário 
    * Tipo de Autenticação
-   * Credenciais de Administrador
 
 ### Implantação Manual no Portal do Azure
 
