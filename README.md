@@ -33,7 +33,7 @@ Este template ARM (Azure Resource Manager) oferece uma implantação otimizada d
 - **Configuração de Armazenamento**:
   - Disco SO: 128GB StandardSSD_LRS
   - Disco de Dados: 300GB Premium_LRS
-- **Estrutura Final Após Configuração do Volumes**:
+- **Estrutura Final Após Configuração dos Volumes**:
 
 ```
 sda                  128G disk
