@@ -19,6 +19,21 @@ Aplica-se a: ✔️ VMs Linux
 | **Tags** | `azure`, `vm`, `securonix`, `arm-template`, `linux-deployment` |
 | **Compatibilidade** | Azure Cloud |
 
+## 📋 Visão Geral
+
+Este template ARM (Azure Resource Manager) oferece uma implantação otimizada de máquina virtual Securonix no ambiente de nuvem Azure.
+
+### 🖥️ Especificações da VM
+
+- **Sistema Operacional**: Oracle Linux 8.10
+- **Recursos Computacionais**: 
+  - Tipo de Instância: D4s v3
+  - vCPUs: 4
+  - RAM: 16GB
+- **Configuração de Armazenamento**:
+  - Disco SO: 128GB StandardSSD_LRS
+  - Disco de Dados: 300GB Premium_LRS
+
 ## 🚀 Opções de Implantação
 
 ### Passos de Implantação Automática
