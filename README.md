@@ -69,9 +69,21 @@ sdc                  300G disk
 
 ### Implantação Manual no Portal do Azure
 
-Caso já tenha provisionado a máquina manualmente no portal do Azure, verifique se selecionou a imagem do SO Oracle Linux 8.10, conforme a imagem.
+Caso já tenha provisionado a máquina manualmente no portal do Azure, verifique se selecionou a imagem do SO Oracle Linux 8.10, conforme a imagem:
 
 ![Seleção de Imagem Oracle Linux](https://github.com/user-attachments/assets/e77448fa-a663-4030-b6e5-d2c26312303d)
+
+Caso vá provisionar a VM pelo portal do Azure, lembre-se de selecionar a imagem do sistema operacional conforme informado acima e de adicionar dois discos, conforme descrito abaixo:
+
+- Disco do SO: 128GB StandardSSD_LRS
+
+![image](https://github.com/user-attachments/assets/f16e4d7a-38b1-46ec-8b49-a6295c20edd4)
+
+- Disco de Dados: 300GB Premium_LRS
+
+![image](https://github.com/user-attachments/assets/cd697783-6be9-4e7e-a335-726982a0026d)
+
+
 
 ## 📦 Configuração Pós-Implantação
 
