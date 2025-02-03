@@ -1,6 +1,13 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
+    "metadata": {
+        "_generator": {
+            "name": "bicep",
+            "version": "0.25.53.49325",
+            "templateHash": "2386182166504519146"
+        }
+    },
     "parameters": {
         "vmName": {
             "type": "string",
@@ -23,20 +30,20 @@
                 "password"
             ],
             "metadata": {
-                "description": "Type of authentication to use on the Virtual Machine."
+                "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
             }
         },
         "adminPasswordOrKey": {
             "type": "securestring",
             "metadata": {
-                "description": "Password or SSH key for the Virtual Machine."
+                "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
             }
         },
         "dnsLabelPrefix": {
             "type": "string",
             "defaultValue": "[toLower(format('{0}-{1}', parameters('vmName'), uniqueString(resourceGroup().id)))]",
             "metadata": {
-                "description": "DNS Name for the Public IP."
+                "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
             }
         },
         "location": {
@@ -55,37 +62,48 @@
         },
         "virtualNetworkName": {
             "type": "string",
-            "defaultValue": "vNet-RIN",
+            "defaultValue": "vNet",
             "metadata": {
                 "description": "Name of the VNET"
             }
         },
         "subnetName": {
             "type": "string",
-            "defaultValue": "Subnet-RIN",
+            "defaultValue": "Subnet",
             "metadata": {
-                "description": "Name of the subnet"
+                "description": "Name of the subnet in the virtual network"
             }
         },
         "networkSecurityGroupName": {
             "type": "string",
-            "defaultValue": "nsg-RIN",
+            "defaultValue": "SecGroupNet",
             "metadata": {
                 "description": "Name of the Network Security Group"
+            }
+        },
+        "securityType": {
+            "type": "string",
+            "defaultValue": "TrustedLaunch",
+            "allowedValues": [
+                "Standard",
+                "TrustedLaunch"
+            ],
+            "metadata": {
+                "description": "Security Type of the Virtual Machine."
             }
         }
     },
     "variables": {
         "imageReference": {
-            "publisher": "CentOS",
-            "offer": "7-LVM",
-            "sku": "gen1",
-            "version": "latest"
+            "publisher": "Oracle",
+            "offer": "Oracle-Linux",
+            "sku": "ol810-lvm-gen2",
+            "version": "8.10.5"
         },
         "publicIPAddressName": "[format('{0}PublicIP', parameters('vmName'))]",
         "networkInterfaceName": "[format('{0}NetInt', parameters('vmName'))]",
         "osDiskType": "StandardSSD_LRS",
-        "osDiskSizeGB": 80,
+        "osDiskSizeGB": 100,
         "dataDiskType": "Premium_LRS",
         "dataDiskSizeGB": 300,
         "subnetAddressPrefix": "10.1.0.0/24",
@@ -101,23 +119,45 @@
                 ]
             }
         },
-        "customData": "#!/bin/bash\n\n# Aguarda dispositivos\nwhile [ ! -b /dev/sda ]; do\n    sleep 1\ndone\n\n# Estende LVM do SO\npvcreate /dev/sda3\nvgextend centos /dev/sda3\nlvextend -L +20GB /dev/mapper/centos-root\nxfs_growfs /\n\n# Aguarda disco de dados\nwhile [ ! -b /dev/sdb ]; do\n    sleep 1\ndone\n\n# Configura disco de dados\nparted --script /dev/sdb mklabel gpt\nparted --script /dev/sdb mkpart primary 0% 100%\npvcreate /dev/sdb1\nvgcreate --physicalextentsize 32 vg_scnx /dev/sdb1\nlvcreate --extents 100%FREE vg_scnx --name securonix --yes\nmkdir /Securonix\nmkfs.xfs -q /dev/vg_scnx/securonix\necho '/dev/vg_scnx/securonix /Securonix xfs defaults 0 0' >> /etc/fstab\nmount -a"
+        "securityProfileJson": {
+            "uefiSettings": {
+                "secureBootEnabled": true,
+                "vTpmEnabled": true
+            },
+            "securityType": "[parameters('securityType')]"
+        },
+        "customData": "#!/bin/bash\n\n# Aguarda o disco ficar disponível\nwhile [ ! -b /dev/sdb ]; do\n    sleep 1\ndone\n\n# Inicializa o disco\npvcreate /dev/sdb\n\n# Cria grupo de volumes\nvgcreate vg_system /dev/sdb\n\n# Cria volumes lógicos\nlvcreate -L 9.5G -n vg_system_swap vg_system\nlvcreate -L 20G -n vg_system_root vg_system\nlvcreate -L 10G -n vg_system_tmp vg_system\nlvcreate -L 10G -n vg_system_var vg_system\nlvcreate -L 20G -n vg_system_home vg_system\nlvcreate -L 10G -n vg_system_opt vg_system\n\n# Formata os volumes\nmkswap /dev/vg_system/vg_system_swap\nmkfs.xfs /dev/vg_system/vg_system_root\nmkfs.xfs /dev/vg_system/vg_system_tmp\nmkfs.xfs /dev/vg_system/vg_system_var\nmkfs.xfs /dev/vg_system/vg_system_home\nmkfs.xfs /dev/vg_system/vg_system_opt\n\n# Cria pontos de montagem\nmkdir -p /mnt/root\nmkdir -p /mnt/tmp\nmkdir -p /mnt/var\nmkdir -p /mnt/home/securonix\nmkdir -p /mnt/opt\n\n# Monta os volumes\nmount /dev/vg_system/vg_system_root /mnt/root\nmount /dev/vg_system/vg_system_tmp /mnt/tmp\nmount /dev/vg_system/vg_system_var /mnt/var\nmount /dev/vg_system/vg_system_home /mnt/home/securonix\nmount /dev/vg_system/vg_system_opt /mnt/opt\n\n# Adiciona entradas ao fstab\necho '/dev/vg_system/vg_system_swap swap swap defaults 0 0' >> /etc/fstab\necho '/dev/vg_system/vg_system_root /root xfs defaults 0 0' >> /etc/fstab\necho '/dev/vg_system/vg_system_tmp /tmp xfs defaults 0 0' >> /etc/fstab\necho '/dev/vg_system/vg_system_var /var xfs defaults 0 0' >> /etc/fstab\necho '/dev/vg_system/vg_system_home /home/securonix xfs defaults 0 0' >> /etc/fstab\necho '/dev/vg_system/vg_system_opt /opt xfs defaults 0 0' >> /etc/fstab\n\n# Ativa a swap\nswapon /dev/vg_system/vg_system_swap"
     },
     "resources": [
         {
-            "type": "Microsoft.Network/publicIPAddresses",
+            "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2023-09-01",
-            "name": "[variables('publicIPAddressName')]",
+            "name": "[variables('networkInterfaceName')]",
             "location": "[parameters('location')]",
-            "sku": {
-                "name": "Basic"
-            },
             "properties": {
-                "publicIPAllocationMethod": "Dynamic",
-                "dnsSettings": {
-                    "domainNameLabel": "[parameters('dnsLabelPrefix')]"
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName')), '2023-09-01').subnets[0].id]"
+                            },
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
+                            }
+                        }
+                    }
+                ],
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
                 }
-            }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]",
+                "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
+            ]
         },
         {
             "type": "Microsoft.Network/networkSecurityGroups",
@@ -157,36 +197,29 @@
                     {
                         "name": "[parameters('subnetName')]",
                         "properties": {
-                            "addressPrefix": "[variables('subnetAddressPrefix')]"
+                            "addressPrefix": "[variables('subnetAddressPrefix')]",
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
                         }
                     }
                 ]
             }
         },
         {
-            "type": "Microsoft.Network/networkInterfaces",
+            "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2023-09-01",
-            "name": "[variables('networkInterfaceName')]",
+            "name": "[variables('publicIPAddressName')]",
             "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
-            ],
+            "sku": {
+                "name": "Basic"
+            },
             "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "ipconfig1",
-                        "properties": {
-                            "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
-                            },
-                            "privateIPAllocationMethod": "Dynamic",
-                            "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
-                            }
-                        }
-                    }
-                ]
+                "publicIPAllocationMethod": "Dynamic",
+                "publicIPAddressVersion": "IPv4",
+                "dnsSettings": {
+                    "domainNameLabel": "[parameters('dnsLabelPrefix')]"
+                },
+                "idleTimeoutInMinutes": 4
             }
         },
         {
@@ -194,34 +227,25 @@
             "apiVersion": "2023-09-01",
             "name": "[parameters('vmName')]",
             "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
-            ],
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "[parameters('vmSize')]"
                 },
-                "osProfile": {
-                    "computerName": "[parameters('vmName')]",
-                    "adminUsername": "[parameters('adminUsername')]",
-                    "adminPassword": "[parameters('adminPasswordOrKey')]",
-                    "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), null(), variables('linuxConfiguration'))]",
-                    "customData": "[base64(variables('customData'))]"
-                },
                 "storageProfile": {
-                    "imageReference": "[variables('imageReference')]",
                     "osDisk": {
                         "createOption": "FromImage",
                         "managedDisk": {
-                            "storageAccountType": "[variables('osDiskType')]",
-                            "diskSizeGB": "[variables('osDiskSizeGB')]"
-                        }
+                            "storageAccountType": "[variables('osDiskType')]"
+                        },
+                        "diskSizeGB": "[variables('osDiskSizeGB')]"
                     },
+                    "imageReference": "[variables('imageReference')]",
                     "dataDisks": [
                         {
-                            "diskSizeGB": "[variables('dataDiskSizeGB')]",
                             "lun": 0,
+                            "name": "[format('{0}-datadisk', parameters('vmName'))]",
                             "createOption": "Empty",
+                            "diskSizeGB": "[variables('dataDiskSizeGB')]",
                             "managedDisk": {
                                 "storageAccountType": "[variables('dataDiskType')]"
                             }
@@ -234,14 +258,33 @@
                             "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
                         }
                     ]
-                }
-            }
+                },
+                "osProfile": {
+                    "computerName": "[parameters('vmName')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPasswordOrKey')]",
+                    "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), null(), variables('linuxConfiguration'))]",
+                    "customData": "[base64(variables('customData'))]"
+                },
+                "securityProfile": "[if(equals(parameters('securityType'), 'TrustedLaunch'), variables('securityProfileJson'), null())]"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+            ]
         }
     ],
     "outputs": {
+        "adminUsername": {
+            "type": "string",
+            "value": "[parameters('adminUsername')]"
+        },
         "hostname": {
             "type": "string",
-            "value": "[reference(variables('publicIPAddressName')).dnsSettings.fqdn]"
+            "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName')), '2023-09-01').dnsSettings.fqdn]"
+        },
+        "sshCommand": {
+            "type": "string",
+            "value": "[format('ssh {0}@{1}', parameters('adminUsername'), reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName')), '2023-09-01').dnsSettings.fqdn)]"
         }
     }
 }
