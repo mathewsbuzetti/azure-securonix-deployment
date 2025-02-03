@@ -238,11 +238,6 @@ sudo systemctl daemon-reload
 - Use `vgs` para verificar o status do grupo de volumes
 - Use `mount` para confirmar a montagem do sistema de arquivos
 
-### Observações Importantes
-
-- Verifique cada comando antes de executar
-- Se algum comando falhar, resolva antes de continuar
-- As letras dos discos (sda, sdb, sdc) podem variar em cada ambiente
 
 ## 🔄 Versionamento
 
