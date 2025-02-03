@@ -45,26 +45,24 @@ Caso já tenha provisionado a máquina manualmente no portal do Azure, siga as i
 
 ## 📦 Configuração Pós-Implantação
 
-## Particionamento do Disco LVM 
-
-```
-├─rootvg-rootvg_swap 9.5G lvm   [SWAP]
-├─rootvg-rootvg_tmp  10G  lvm   /tmp
-├─rootvg-rootvg_var  10G  lvm   /var
-├─rootvg-rootvg_home 20G  lvm   /home/securonix
-└─rootvg-rootvg_opt  10G  lvm   /opt
-```
-
-## Expansão da Partição
-O volume root (rootlv) é expandido para 20GB:
-
-```
-├─rootvg-rootlv      20G  lvm   /
-```
+Observações Importantes:
+O sistema já vem com rootlv e crashlv configurados
+As letras dos discos (sda, sdb, sdc) podem variar em cada ambiente
 
 Principais pontos:
 - Partições de swap, tmp, var, home e opt
 - Volume root expandido para 20GB
+
+Montagem da Partição
+Copy├─rootvg-rootvg_swap 9.5G lvm   [SWAP]
+├─rootvg-rootvg_tmp  10G  lvm   /tmp
+├─rootvg-rootvg_var  10G  lvm   /var
+├─rootvg-rootvg_home 20G  lvm   /home/securonix
+└─rootvg-rootvg_opt  10G  lvm   /opt
+
+Aumento do Volume da Partição
+Copy├─rootvg-rootlv      20G  lvm   /
+
 
 ### Identificação dos Discos
 
