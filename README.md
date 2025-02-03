@@ -46,18 +46,46 @@ Caso já tenha provisionado a máquina manualmente no portal do Azure, siga as i
 
 ### Visão Geral da Arquitetura de Volumes
 
-```
-Estrutura de Volumes LVM:
-├─rootvg-rootlv      20G  lvm   /
-├─rootvg-rootvg_swap 9.5G lvm   [SWAP]
-├─rootvg-rootvg_tmp  10G  lvm   /tmp
-├─rootvg-rootvg_var  10G  lvm   /var
-├─rootvg-rootvg_home 20G  lvm   /home/securonix
-└─rootvg-rootvg_opt  10G  lvm   /opt
+#### Exemplo de Estrutura Inicial de Discos
 
-Disco Adicional:
-└─vg_scnx-securonix 300G lvm   /Securonix
 ```
+NAME                MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                   8:0    0  100G  0 disk
+├─sda1                8:1    0  800M  0 part /boot
+├─sda2                8:2    0 28.7G  0 part
+  ├─rootvg-rootlv   252:0    0 18.7G  0 lvm  /
+  ├─rootvg-crashlv  252:1    0   10G  0 lvm  /var/crash
+├─sda14               8:14   0    4M  0 part
+└─sda15               8:15   0  495M  0 part /boot/efi
+sdb                   8:16   0   32G  0 disk
+sdc                   8:32   0  300G  0 disk
+sr0                  11:0    1  634K  0 rom
+```
+
+#### Estrutura Final Esperada Após Configuração
+
+```
+sda                  128G disk
+├─sda1               800M part /boot
+├─sda2               120.3G part
+  ├─rootvg-rootlv      20G lvm /
+  ├─rootvg-crashlv     10G lvm /var/crash
+  ├─rootvg-rootvg_swap 9.5G lvm [SWAP]
+  ├─rootvg-rootvg_tmp  10G lvm /tmp
+  ├─rootvg-rootvg_var  10G lvm /var
+  ├─rootvg-rootvg_home 20G lvm /home/securonix
+  └─rootvg-rootvg_opt  10G lvm /opt
+sdb                   32G disk
+└─sdb1                32G part /mnt
+sdc                  300G disk
+└─sdc1               300G part
+  └─vg_scnx-securonix 300G lvm /Securonix
+```
+
+**Observações:**
+- As letras dos discos podem variar em seu ambiente
+- Use `lsblk` para verificar a estrutura atual dos seus discos
+- Ajuste os comandos de acordo com a estrutura específica do seu sistema
 
 ### Procedimento Detalhado de Configuração
 
@@ -206,6 +234,11 @@ sudo systemctl daemon-reload
 - Use `vgs` para verificar o status do grupo de volumes
 - Use `mount` para confirmar a montagem do sistema de arquivos
 
+### Observações Importantes
+
+- Verifique cada comando antes de executar
+- Se algum comando falhar, resolva antes de continuar
+- As letras dos discos (sda, sdb, sdc) podem variar em cada ambiente
 
 ## 📝 Licença
 
