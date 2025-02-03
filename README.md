@@ -73,7 +73,7 @@ Caso já tenha provisionado a máquina manualmente no portal do Azure, verifique
 
 ![Seleção de Imagem Oracle Linux](https://github.com/user-attachments/assets/e77448fa-a663-4030-b6e5-d2c26312303d)
 
-Caso vá provisionar a VM no portal do Azure, lembre-se de selecionar a imagem do SO conforme informado acima e de adicionar dois discos conforme indicado:
+Caso deseje provisionar a VM pelo portal do Azure, lembre-se de selecionar a imagem do sistema operacional conforme informado acima e de adicionar dois discos, conforme descrito abaixo:
 
 - Disco do SO: 128GB StandardSSD_LRS
 
