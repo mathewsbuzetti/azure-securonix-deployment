@@ -12,14 +12,12 @@ Aplica-se a: ✔️ VMs Linux
 | **Título** | Template ARM para Provisionamento de VM Securonix no Azure |
 | **Versão** | 1.0.0 |
 | **Autor** | Mathews Buzetti |
-| **Data de Criação** | 31/01/2025 |
+| **Data de Criação** | 03/02/2025 |
 | **Tipo de Recurso** | Azure Virtual Machines |
 | **Sistema Operacional** | Oracle Linux 8.10 |
 | **Classificação** | Início Rápido |
 | **Tags** | `azure`, `vm`, `securonix`, `arm-template`, `linux-deployment` |
-| **Licença** | Uso livre para projetos pessoais e comerciais |
 | **Compatibilidade** | Azure Cloud |
-| **Requisitos** | Assinatura Azure, Permissões de Implantação |
 
 ## 🚀 Opções de Implantação
 
@@ -232,6 +230,8 @@ sudo systemctl daemon-reload
 - Se algum comando falhar, resolva antes de continuar
 - As letras dos discos (sda, sdb, sdc) podem variar em cada ambiente
 
-## 📝 Licença
+## 🔄 Versionamento
 
-Uso livre para projetos pessoais e comerciais. Atribuição necessária em caso de uso ou redistribuição.
+- Versão: 1.0.0
+- Última atualização: 03/02/2025
+
