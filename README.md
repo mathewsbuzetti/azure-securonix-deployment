@@ -50,7 +50,7 @@ Este template ARM (Azure Resource Manager) oferece uma implantação otimizada d
 
 ### Implantação Manual no Portal do Azure
 
-Caso já tenha provisionado a máquina manualmente no portal do Azure, siga as instruções abaixo. Importante: verifique se selecionou a imagem de SO Oracle Linux 8.10 conforme a imagem:
+Caso já tenha provisionado a máquina manualmente no portal do Azure, verifique se selecionou a imagem do SO Oracle Linux 8.10, conforme a imagem.
 
 ![Seleção de Imagem Oracle Linux](https://github.com/user-attachments/assets/e77448fa-a663-4030-b6e5-d2c26312303d)
 
