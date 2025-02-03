@@ -1,27 +1,47 @@
+# 🚀 Template de Implantação de VM Securonix no Azure
+
 ![Azure](https://img.shields.io/badge/Azure-blue?style=flat-square&logo=microsoftazure) ![Linux](https://img.shields.io/badge/Linux-FCC624?style=flat-square&logo=linux&logoColor=black) ![ARM Template](https://img.shields.io/badge/ARM-Template-orange?style=flat-square)
 
 ✔️ Applies to: Azure Linux VMs
 
-### Deployment Options
+## 🛠️ Metadados
 
-#### Automated Deployment
+| Campo | Detalhes |
+|-------|----------|
+| **Título** | Template ARM para Provisionamento de VM Securonix no Azure |
+| **Versão** | 1.0.0 |
+| **Autor** | Mathews Buzetti |
+| **Data de Criação** | 31/01/2025 |
+| **Tipo de Recurso** | Azure Virtual Machines |
+| **Sistema Operacional** | Oracle Linux 8.10 |
+| **Classificação** | Início Rápido |
+| **Tags** | `azure`, `vm`, `securonix`, `arm-template`, `linux-deployment` |
+| **Licença** | Uso livre para projetos pessoais e comerciais |
+| **Compatibilidade** | Azure Cloud |
+| **Requisitos** | Assinatura Azure, Permissões de Implantação |
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmathewsbuzetti%2Fsecuronixish%2Fmain%2Fazuredeploy.json)
 
-1. Click the "Deploy to Azure" button above
-2. Configure deployment parameters:
-   - Subscription
-   - Resource Group 
-   - Region
-   - Admin Username
-   - Authentication Type
-   - Admin Credentials
+## 🚀 Opções de Implantação
 
-#### Manual Deployment in Azure Portal
+### Passos de Implantação Automática
 
-If you have already provisioned the machine manually in the Azure portal, follow the instructions below. Important: Verify that you selected the Oracle Linux 8.10 OS image as shown in the image:
+[![Implantar no Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmathewsbuzetti%2Fsecuronixish%2Fmain%2Fazuredeploy.json)
 
-![Oracle Linux Image Selection](https://github.com/user-attachments/assets/e77448fa-a663-4030-b6e5-d2c26312303d)
+1. Clique no botão acima "Deploy to Azure"
+2. Configure os parâmetros de implantação:
+   * Assinatura
+   * Grupo de Recursos
+   * Região
+   * Nome de Usuário Administrador
+   * Tipo de Autenticação
+   * Credenciais de Administrador
+
+### Implantação Manual no Portal do Azure
+
+Caso já tenha provisionado a máquina manualmente no portal do Azure, siga as instruções abaixo. Importante: verifique se selecionou a imagem de SO Oracle Linux 8.10 conforme a imagem:
+
+Show Image
+![Seleção de Imagem Oracle Linux](https://github.com/user-attachments/assets/e77448fa-a663-4030-b6e5-d2c26312303d)
 
 ## 📦 Configuração Pós-Implantação
 
