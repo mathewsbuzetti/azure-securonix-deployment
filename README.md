@@ -108,26 +108,6 @@ sdc                   8:32   0  300G  0 disk
 sr0                  11:0    1  634K  0 rom
 ```
 
-#### Estrutura Final Esperada Após Configuração
-
-```
-sda                  128G disk
-├─sda1               800M part /boot
-├─sda2               120.3G part
-  ├─rootvg-rootlv      20G lvm /
-  ├─rootvg-crashlv     10G lvm /var/crash
-  ├─rootvg-rootvg_swap 9.5G lvm [SWAP]
-  ├─rootvg-rootvg_tmp  10G lvm /tmp
-  ├─rootvg-rootvg_var  10G lvm /var
-  ├─rootvg-rootvg_home 20G lvm /home/securonix
-  └─rootvg-rootvg_opt  10G lvm /opt
-sdb                   32G disk
-└─sdb1                32G part /mnt
-sdc                  300G disk
-└─sdc1               300G part
-  └─vg_scnx-securonix 300G lvm /Securonix
-```
-
 **Observações:**
 - As letras dos discos podem variar em seu ambiente
 - Use `lsblk` para verificar a estrutura atual dos seus discos
@@ -268,6 +248,26 @@ EOF
 sudo mount -a
 sudo swapon -a
 sudo systemctl daemon-reload
+```
+
+#### Estrutura Final Esperada Após Configuração
+
+```
+sda                  128G disk
+├─sda1               800M part /boot
+├─sda2               120.3G part
+  ├─rootvg-rootlv      20G lvm /
+  ├─rootvg-crashlv     10G lvm /var/crash
+  ├─rootvg-rootvg_swap 9.5G lvm [SWAP]
+  ├─rootvg-rootvg_tmp  10G lvm /tmp
+  ├─rootvg-rootvg_var  10G lvm /var
+  ├─rootvg-rootvg_home 20G lvm /home/securonix
+  └─rootvg-rootvg_opt  10G lvm /opt
+sdb                   32G disk
+└─sdb1                32G part /mnt
+sdc                  300G disk
+└─sdc1               300G part
+  └─vg_scnx-securonix 300G lvm /Securonix
 ```
 
 ## 🚨 Resolução de Problemas
