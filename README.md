@@ -270,12 +270,6 @@ sdc                  300G disk
   └─vg_scnx-securonix 300G lvm /Securonix
 ```
 
-## 🚨 Resolução de Problemas
-
-- Use `lsblk` para verificar o alinhamento de partições
-- Use `vgs` para verificar o status do grupo de volumes
-- Use `mount` para confirmar a montagem do sistema de arquivos
-
 
 ## 🔄 Versionamento
 
