@@ -16,7 +16,6 @@ Aplica-se a: ✔️ VMs Linux
 | **Data de Criação** | 03/02/2025 |
 | **Tipo de Recurso** | Azure Virtual Machines |
 | **Sistema Operacional** | Oracle Linux 8.10 |
-| **Classificação** | Início Rápido |
 | **Tags** | `azure`, `vm`, `securonix`, `arm-template`, `linux-deployment` |
 | **Compatibilidade** | Azure Cloud |
 
