@@ -28,7 +28,7 @@ Aplica-se a: ✔️ VMs Linux
 5. [Configuração Pós-Implantação](#-configuração-pós-implantação)
 6. [Versionamento](#-versionamento)
 
-## 🎯 Objetivo
+## 💡 Visão Geral
 
 Este template ARM (Azure Resource Manager) oferece uma implantação otimizada de máquina virtual Securonix no ambiente de nuvem Azure.
 
