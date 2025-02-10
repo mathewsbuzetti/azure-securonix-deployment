@@ -145,7 +145,7 @@ lsblk
 ```bash
 sudo parted /dev/sda disk_set pmbr_boot on
 ```
-*Substitua `sda` pela letra do seu disco do sistema*
+>  - *Substitua `sda` pela letra do seu disco do sistema*
 
 - Responda "Fix" se perguntado
 - Pressione ENTER para "Flag to Invert"
@@ -155,13 +155,13 @@ sudo parted /dev/sda disk_set pmbr_boot on
 ```bash
 sudo parted /dev/sda resizepart 2 95%
 ```
-*Substitua `sda` pela letra do seu disco do sistema*
+>  - *Substitua `sda` pela letra do seu disco do sistema*
 
 3. Redimensionamento do volume físico:
 ```bash
 sudo pvresize /dev/sda2
 ```
-*Substitua `sda` pela letra do seu disco do sistema*
+>  - *Substitua `sda` pela letra do seu disco do sistema*
 
 4. Aumento do volume root:
 ```bash
@@ -222,7 +222,7 @@ sudo mkfs.xfs -f /dev/vg_scnx/securonix
   sudo mkfs.xfs -f /dev/vg_scnx/securonix
   ```
 
-**Dica:** Sempre verifique a saída do comando `lsblk` antes de executar qualquer operação de particionamento.
+>  - **Dica:** Sempre verifique a saída do comando `lsblk` antes de executar qualquer operação de particionamento.
 
 **Observação Importante:** 
 - A numeração da partição (sdc**1**) deve corresponder à partição criada no comando `mkpart`
