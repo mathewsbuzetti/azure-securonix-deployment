@@ -191,13 +191,14 @@ sudo mkfs.xfs -f /dev/rootvg/rootvg_opt
 
 #### 5. Configuração do Disco Adicional de 300GB
 
-> **⚠️ Atenção:** Substitua `/dev/sdc` e `/dev/sdc1` pelas letras corretas do disco adicional de 300GB em seu ambiente.
+> [!WARNING]
+> Substitua `/dev/sdc` e `/dev/sdc1` pelas letras corretas do disco adicional de 300GB em seu ambiente.
 > 
 > Como identificar a letra correta:
-> - Use o comando `lsblk` para visualizar os discos
-> - Identifique o disco de 300GB
-> - Substitua todos os comandos abaixo com a letra do disco identificado
-> - Preste atenção especial na numeração da partição (sdc**1**)
+>   Use o comando `lsblk` para visualizar os discos
+>   Identifique o disco de 300GB
+>   Substitua todos os comandos abaixo com a letra do disco identificado
+>   Preste atenção especial na numeração da partição (sdc**1**)
 
 ```bash
 sudo parted --script /dev/sdc mklabel gpt
