@@ -134,8 +134,7 @@ lsblk
 
 #### 2. Configuração do Disco do Sistema
 
-> [!AVISO]\
-> Substitua `/dev/sda` pela letra do disco correto em seu ambiente.
+> **⚠️ Atenção:** Substitua `/dev/sda` pela letra do disco correto em seu ambiente.
 
 > Como identificar a letra correta:
 > - Use o comando `lsblk` para visualizar os discos
@@ -285,7 +284,7 @@ sdc                  300G disk
 - Versão: 1.0.0
 - Última atualização: 03/02/2025
 
-> [!WARNING]\
+> [!AVISO]\
 > By default, the stats card only shows statistics like stars, commits, and pull requests from public repositories. To show private statistics on the stats card, you should [deploy your own instance](#deploy-on-your-own) using your own GitHub API token.
 
 > [!NOTE]\
