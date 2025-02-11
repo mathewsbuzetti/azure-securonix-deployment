@@ -117,10 +117,10 @@ sdc                   8:32   0  300G  0 disk
 sr0                  11:0    1  634K  0 rom
 ```
 
-**Observações:**
-- As letras dos discos podem variar em seu ambiente
-- Use `lsblk` para verificar a estrutura atual dos seus discos
-- Ajuste os comandos de acordo com a estrutura específica do seu sistema
+> [!WARNING]
+> As letras dos discos podem variar em seu ambiente
+> Use `lsblk` para verificar a estrutura atual dos seus discos
+> Ajuste os comandos de acordo com a estrutura específica do seu sistema
 
 ### Procedimento Detalhado de Configuração
 
@@ -154,13 +154,15 @@ sudo parted /dev/sda disk_set pmbr_boot on
 ```bash
 sudo parted /dev/sda resizepart 2 95%
 ```
->  - *Substitua `sda` pela letra do seu disco do sistema*
+> [!WARNING]\
+> *Substitua `sda` pela letra do seu disco do sistema*
 
 3. Redimensionamento do volume físico:
 ```bash
 sudo pvresize /dev/sda2
 ```
->  - *Substitua `sda` pela letra do seu disco do sistema*
+> [!WARNING]\
+> *Substitua `sda` pela letra do seu disco do sistema*
 
 4. Aumento do volume root:
 ```bash
