@@ -221,9 +221,10 @@ sudo mkfs.xfs -f /dev/vg_scnx/securonix
   sudo mkfs.xfs -f /dev/vg_scnx/securonix
   ```
 
->  - **Dica:** Sempre verifique a saída do comando `lsblk` antes de executar qualquer operação de particionamento.
+> [!TIP]\
+> Sempre verifique a saída do comando `lsblk` antes de executar qualquer operação de particionamento.
 
-> **⚠️ Atenção:**
+> [!WARNING]
 > - A numeração da partição (sdc**1**) deve corresponder à partição criada no comando `mkpart`
 > - Se o comando `lsblk` mostrar uma diferente numeração, ajuste os comandos de acordo
 
