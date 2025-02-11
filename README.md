@@ -285,6 +285,6 @@ sdc                  300G disk
 - Última atualização: 03/02/2025
 
 
-> [!WARNING]\
+> [!WARNING]
 > - A numeração da partição (sdc**1**) deve corresponder à partição criada no comando `mkpart`
 > - Se o comando `lsblk` mostrar uma diferente numeração, ajuste os comandos de acordo
