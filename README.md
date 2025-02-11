@@ -134,7 +134,8 @@ lsblk
 
 #### 2. Configuração do Disco do Sistema
 
-> [!AVISO]\ Substitua `/dev/sda` pela letra do disco correto em seu ambiente.
+> [!AVISO]\
+> Substitua `/dev/sda` pela letra do disco correto em seu ambiente.
 
 > Como identificar a letra correta:
 > - Use o comando `lsblk` para visualizar os discos
