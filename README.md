@@ -118,9 +118,9 @@ sr0                  11:0    1  634K  0 rom
 ```
 
 > [!WARNING]
-> As letras dos discos podem variar em seu ambiente
-> Use `lsblk` para verificar a estrutura atual dos seus discos
-> Ajuste os comandos de acordo com a estrutura específica do seu sistema
+> - As letras dos discos podem variar em seu ambiente
+> - Use `lsblk` para verificar a estrutura atual dos seus discos
+> - Ajuste os comandos de acordo com a estrutura específica do seu sistema
 
 ### Procedimento Detalhado de Configuração
 
@@ -134,8 +134,9 @@ lsblk
 
 #### 2. Configuração do Disco do Sistema
 
-> **⚠️ Atenção:** Substitua `/dev/sda` pela letra do disco correto em seu ambiente.
-
+> [!WARNING]
+> Substitua `/dev/sda` pela letra do disco correto em seu ambiente.
+> 
 > Como identificar a letra correta:
 > - Use o comando `lsblk` para visualizar os discos
 > - Verifique qual disco corresponde ao disco do sistema
