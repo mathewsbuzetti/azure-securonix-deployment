@@ -283,9 +283,3 @@ sdc                  300G disk
 
 - Versão: 1.0.0
 - Última atualização: 03/02/2025
-
-> :warning: **Importante:**
-> Nomes de linguagens devem ser uma sequência escapada de URI, como específicado em [Codificação por cento](https://pt.wikipedia.org/wiki/Codificação_por_cento)
-> (Ou seja: `c++` deve se tornar `c%2B%2B`, `jupyter notebook` deve se tornar `jupyter%20notebook`, etc.)
-
-
