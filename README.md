@@ -146,6 +146,7 @@ lsblk
 ```bash
 sudo parted /dev/sda disk_set pmbr_boot on
 ```
+> [!WARNING]
 >  - *Substitua `sda` pela letra do seu disco do sistema*
 >  - Responda "Fix" se perguntado
 >  - Pressione ENTER para "Flag to Invert"
