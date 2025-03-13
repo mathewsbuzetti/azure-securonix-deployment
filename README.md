@@ -44,7 +44,7 @@ Este template ARM (Azure Resource Manager) oferece uma implantação otimizada d
   - RAM: 16GB
 - **Configuração de Armazenamento**:
   - Disco SO: 128GB StandardSSD_LRS
-  - Disco de Dados: 300GB Premium_LRS
+  - Disco de Dados: 512GB Premium_LRS
 - **Estrutura Final Após Configuração dos Volumes**:
 
 ```
@@ -60,9 +60,9 @@ sda                  128G disk
   └─rootvg-rootvg_opt  10G lvm /opt
 sdb                   32G disk
 └─sdb1                32G part /mnt
-sdc                  300G disk
-└─sdc1               300G part
-  └─vg_scnx-securonix 300G lvm /Securonix
+sdc                  512G disk
+└─sdc1               512G part
+  └─vg_scnx-securonix 512G lvm /Securonix
 ```
 
 ## 🚀 Opções de Implantação
@@ -91,7 +91,7 @@ Caso deseje provisionar a VM pelo portal do Azure, lembre-se de selecionar a ima
 
 ![image](https://github.com/user-attachments/assets/f16e4d7a-38b1-46ec-8b49-a6295c20edd4)
 
-- Disco de Dados: 300GB Premium_LRS
+- Disco de Dados: 512GB Premium_LRS
 
 ![image](https://github.com/user-attachments/assets/cd697783-6be9-4e7e-a335-726982a0026d)
 
@@ -102,7 +102,81 @@ Caso deseje provisionar a VM pelo portal do Azure, lembre-se de selecionar a ima
 
 ## 📦 Configuração Pós-Implantação
 
-### Visão Geral da Arquitetura de Volumes
+### Opções de Configuração
+
+Para configurar os discos da sua VM Securonix, você tem duas opções:
+
+1. **[Recomendado] Configuração Automatizada** - Utilizando o script `securonix-disk-configurator.sh`
+2. **Configuração Manual** - Seguindo o procedimento detalhado passo a passo
+
+### Opção 1: Configuração Automatizada com Script
+
+O script `securonix-disk-configurator.sh` automatiza todo o processo de configuração dos volumes necessários para o Securonix. Abaixo estão os passos com capturas de tela ilustrativas para facilitar o entendimento.
+
+#### Passos para Execução do Script
+
+1. **Criar o arquivo do script**:
+   ```bash
+   nano securonix-disk-configurator.sh
+   ```
+   * Cole o conteúdo do script disponibilizado
+
+2. **Tornar o script executável**:
+   ```bash
+   chmod +x securonix-disk-configurator.sh
+   ```
+
+3. **Executar o script com privilégios de superusuário**:
+   ```bash
+   sudo ./securonix-disk-configurator.sh
+   ```
+
+4. **Tela inicial**: O script mostrará a configuração que será aplicada nos discos do sistema e de dados. 
+
+   ![Tela inicial do script de configuração](IMAGEM_TELA_INICIAL)
+   
+   > Nesta tela você poderá visualizar as configurações que serão aplicadas no disco do sistema e no disco de dados.
+
+5. **Seleção dos discos**: Na próxima tela, você deverá selecionar os discos para o sistema e para dados. 
+
+   ![Layout de discos e seleção](IMAGEM_LAYOUT_DISCOS)
+   
+   Exemplo da estrutura de discos que pode aparecer:
+   ```
+   NAME                MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+   sda                   8:0    0  100G  0 disk
+   ├─sda1                8:1    0  800M  0 part /boot
+   ├─sda2                8:2    0 28.7G  0 part
+     ├─rootvg-rootlv   252:0    0 18.7G  0 lvm  /
+     ├─rootvg-crashlv  252:1    0   10G  0 lvm  /var/crash
+   ├─sda14               8:14   0    4M  0 part
+   └─sda15               8:15   0  495M  0 part /boot/efi
+   sdb                   8:16   0   32G  0 disk
+   sdc                   8:32   0  512G  0 disk
+   ```
+
+   ![Seleção de partição do sistema](IMAGEM_SELECAO_PARTICAO)
+
+   * Para o disco do sistema, você deve selecionar a partição (ex: `sda2`)
+   * Para o disco de dados, você deve selecionar o disco completo (ex: `sdc`)
+
+6. **Mensagens durante a execução**: Quando solicitado pelo script, responda:
+
+   ![Avisos durante execução](IMAGEM_AVISOS)
+   
+   * Quando aparecer "Fix/Ignore?" → Digite `Fix` e pressione ENTER
+   * Quando aparecer "Flag to Invert? [pmbr_boot]?" → Apenas pressione ENTER
+   * Quando aparecer "New state? [on]/off?" → Digite `on` e pressione ENTER
+
+7. **Conclusão**: Após a execução do script, o sistema exibirá a configuração final dos discos, confirmando o sucesso da operação.
+
+   ![Configuração concluída](IMAGEM_CONCLUSAO)
+
+### Opção 2: Configuração Manual
+
+Caso prefira configurar os discos manualmente, siga o procedimento detalhado abaixo.
+
+#### Visão Geral da Arquitetura de Volumes
 
 #### Exemplo de Estrutura Inicial de Discos
 
@@ -116,7 +190,7 @@ sda                   8:0    0  100G  0 disk
 ├─sda14               8:14   0    4M  0 part
 └─sda15               8:15   0  495M  0 part /boot/efi
 sdb                   8:16   0   32G  0 disk
-sdc                   8:32   0  300G  0 disk
+sdc                   8:32   0  512G  0 disk
 sr0                  11:0    1  634K  0 rom
 ```
 
@@ -196,14 +270,14 @@ sudo mkfs.xfs -f /dev/rootvg/rootvg_home
 sudo mkfs.xfs -f /dev/rootvg/rootvg_opt
 ```
 
-#### 5. Configuração do Disco Adicional de 300GB
+#### 5. Configuração do Disco Adicional de 512GB
 
 > [!WARNING]
-> Substitua `/dev/sdc` e `/dev/sdc1` pelas letras corretas do disco adicional de 300GB em seu ambiente.
+> Substitua `/dev/sdc` e `/dev/sdc1` pelas letras corretas do disco adicional de 512GB em seu ambiente.
 > 
 > Como identificar a letra correta:
 > 1. Use o comando `lsblk` para visualizar os discos
-> 2. Identifique o disco de 300GB
+> 2. Identifique o disco de 512GB
 > 3. Substitua todos os comandos abaixo com a letra do disco identificado
 > 4. Preste atenção especial na numeração da partição (sdc**1**)
 
@@ -218,7 +292,7 @@ sudo mkfs.xfs -f /dev/vg_scnx/securonix
 ```
 
 **Exemplos práticos:**
-- Se seu disco de 300GB for `sdb`, use:
+- Se seu disco de 512GB for `sdb`, use:
   ```bash
   sudo parted --script /dev/sdb mklabel gpt
   sudo parted --script /dev/sdb mkpart primary 0% 100%
@@ -282,11 +356,10 @@ sda                  128G disk
   └─rootvg-rootvg_opt  10G lvm /opt
 sdb                   32G disk
 └─sdb1                32G part /mnt
-sdc                  300G disk
-└─sdc1               300G part
-  └─vg_scnx-securonix 300G lvm /Securonix
+sdc                  512G disk
+└─sdc1               512G part
+  └─vg_scnx-securonix 512G lvm /Securonix
 ```
-
 
 ## 🔄 Versionamento
 
