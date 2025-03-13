@@ -97,7 +97,7 @@ Caso deseje provisionar a VM pelo portal do Azure, lembre-se de selecionar a ima
 
 ![image](https://github.com/user-attachments/assets/602c04a0-4c2f-4a2a-9a3e-6b0bbecffc1d)
 
-![image](https://github.com/user-attachments/assets/10aaadbd-3f0f-43f0-9ddb-789878f5bd3d)
+![image](https://github.com/user-attachments/assets/3f234b41-8bd6-46a7-b098-27dca2a7b67c)
 
 
 ## 📦 Configuração Pós-Implantação
