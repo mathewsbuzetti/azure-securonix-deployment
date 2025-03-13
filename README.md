@@ -135,9 +135,6 @@ O script `securonix-disk-configurator.sh` automatiza todo o processo de configur
 
    ![Tela inicial do script de configuração](https://github.com/user-attachments/assets/668ab670-8da0-45a6-9222-91dc9719b9f7)
 
-   
-   > Nesta tela você poderá visualizar as configurações que serão aplicadas no disco do sistema e no disco de dados.
-
 6. **Seleção dos discos**: Na próxima tela, você deverá selecionar os discos para o sistema e para dados. 
 
    ![Layout de discos e seleção](https://github.com/user-attachments/assets/c407a73e-f085-4041-a06d-c95d9aa03065)
@@ -162,7 +159,6 @@ O script `securonix-disk-configurator.sh` automatiza todo o processo de configur
 9. **Conclusão**: Após a execução do script, o sistema exibirá a configuração final dos discos, confirmando o sucesso da operação.
 
    ![Configuração concluída](https://github.com/user-attachments/assets/2d7966b9-2ec5-458d-9de8-fde27d1244eb)
-
 
 ### Opção 2: Configuração Manual
 
