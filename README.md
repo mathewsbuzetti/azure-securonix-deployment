@@ -121,11 +121,11 @@ O script `securonix-disk-configurator.sh` automatiza todo o processo de configur
    ```
    * Cole o conteúdo do script disponibilizado
    
-   > [!WARNING]
-   > - Certifique-se de copiar **TODO** o conteúdo do script sem modificações
-   > - Execute este comando no diretório onde deseja manter o script
-   > - Não altere o nome do arquivo para garantir compatibilidade com as instruções
-   > - O script deve ser executado em uma VM recém-criada antes de qualquer outra configuração
+> [!WARNING]
+> - Certifique-se de copiar **TODO** o conteúdo do script sem modificações
+> - Execute este comando no diretório onde deseja manter o script
+> - Não altere o nome do arquivo para garantir compatibilidade com as instruções
+> - O script deve ser executado em uma VM recém-criada antes de qualquer outra configuração
 
 2. **Tornar o script executável**:
    ```bash
@@ -139,15 +139,16 @@ O script `securonix-disk-configurator.sh` automatiza todo o processo de configur
 
 4. **Tela inicial**: O script mostrará a tela de boas-vindas com a configuração que será aplicada nos discos.
 
-   ![Tela inicial do script de configuração](https://github.com/user-attachments/assets/668ab670-8da0-45a6-9222-91dc9719b9f7)
-   
-   Esta tela inicial apresenta:
-   * A estrutura de volumes que será criada no disco do sistema
-   * A estrutura do volume de dados que será montado em `/Securonix`
+![Tela inicial do script de configuração](https://github.com/user-attachments/assets/668ab670-8da0-45a6-9222-91dc9719b9f7)
+ 
+> [!WARNING]
+> Esta tela inicial apresenta:  
+> * A estrutura de volumes que será criada no disco do sistema
+> * A estrutura do volume de dados que será montado em `/Securonix`
 
 5. **Visualização de discos e seleção**: O script exibirá os discos disponíveis e solicitará que você selecione os discos apropriados.
 
-   ![Layout de discos e seleção](https://github.com/user-attachments/assets/c407a73e-f085-4041-a06d-c95d9aa03065)
+![Layout de discos e seleção](https://github.com/user-attachments/assets/c407a73e-f085-4041-a06d-c95d9aa03065)
    
 > [!WARNING]
 > Nesta tela: 
@@ -158,45 +159,45 @@ O script `securonix-disk-configurator.sh` automatiza todo o processo de configur
    
 6. **Seleção da partição do sistema**: Digite a partição do disco do sistema que contém os volumes lógicos.
 
-   ![Seleção de partição do sistema](https://github.com/user-attachments/assets/898dd06e-3eb0-4852-b3c5-c5b9c30e9569)
+![Seleção de partição do sistema](https://github.com/user-attachments/assets/898dd06e-3eb0-4852-b3c5-c5b9c30e9569)
    
-   > [!WARNING]
-   > * Neste exemplo, o usuário selecionou `sdb2` como a partição do sistema
-   > * Em seguida, você deverá selecionar o disco para dados (ex: `sda`)
-   > * Selecionar a partição errada pode causar perda de dados ou falha na instalação
-   > * Certifique-se de selecionar a partição que contém os volumes lógicos rootvg
+> [!WARNING]
+> * Neste exemplo, o usuário selecionou `sdb2` como a partição do sistema
+> * Em seguida, você deverá selecionar o disco para dados (ex: `sda`)
+> * Selecionar a partição errada pode causar perda de dados ou falha na instalação
+> * Certifique-se de selecionar a partição que contém os volumes lógicos rootvg
 
 7. **Resumo da configuração**: O script apresentará um resumo das escolhas feitas para confirmação.
 
-   ![Resumo da configuração](https://github.com/user-attachments/assets/7e3b1b50-4b7d-48c5-96ec-d483ac29d78b)
+![Resumo da configuração](https://github.com/user-attachments/assets/7e3b1b50-4b7d-48c5-96ec-d483ac29d78b)
    
-   > [!WARNING]
-   > * Verifique se os discos selecionados estão corretos
-   > * TODOS os dados no disco selecionado para dados serão destruídos
-   > * Confirme digitando `s` quando solicitado
-   > * Esta é sua última chance de cancelar antes que as mudanças sejam aplicadas
+> [!WARNING]
+> * Verifique se os discos selecionados estão corretos
+> * TODOS os dados no disco selecionado para dados serão destruídos
+> * Confirme digitando `s` quando solicitado
+> * Esta é sua última chance de cancelar antes que as mudanças sejam aplicadas
 
 8. **Mensagens durante a execução**: Durante a configuração, você verá avisos do sistema que requerem sua interação:
 
-   ![Avisos durante execução](https://github.com/user-attachments/assets/cd3e6b53-6d23-451d-8245-60f440d12926)
+![Avisos durante execução](https://github.com/user-attachments/assets/cd3e6b53-6d23-451d-8245-60f440d12926)
    
-   > [!WARNING]
-   > Quando essas mensagens aparecerem, responda **EXATAMENTE** da seguinte forma:
-   > * Quando aparecer "Fix/Ignore?" → Digite `Fix` e pressione ENTER
-   > * Quando aparecer "Flag to Invert? [pmbr_boot]?" → Apenas pressione ENTER
-   > * Quando aparecer "New state? [on]/off?" → Digite `on` e pressione ENTER
-   >
-   > Responder incorretamente a essas mensagens pode resultar em falha na configuração!
+> [!WARNING]
+> Quando essas mensagens aparecerem, responda **EXATAMENTE** da seguinte forma:
+> * Quando aparecer "Fix/Ignore?" → Digite `Fix` e pressione ENTER
+> * Quando aparecer "Flag to Invert? [pmbr_boot]?" → Apenas pressione ENTER
+> * Quando aparecer "New state? [on]/off?" → Digite `on` e pressione ENTER
+>
+> Responder incorretamente a essas mensagens pode resultar em falha na configuração!
 
 9. **Conclusão**: Ao término da execução, o script exibirá a configuração final dos discos.
 
-   ![Configuração concluída](https://github.com/user-attachments/assets/2d7966b9-2ec5-458d-9de8-fde27d1244eb)
+![Configuração concluída](https://github.com/user-attachments/assets/2d7966b9-2ec5-458d-9de8-fde27d1244eb)
    
-   > [!NOTE]
-   > * Verifique a estrutura final dos discos
-   > * Confirme que todos os volumes foram criados corretamente
-   > * A mensagem "Configuração de disco concluída com sucesso!" indica que o processo foi finalizado sem erros
-   > * Anote essa configuração para referência futura
+> [!NOTE]
+> * Verifique a estrutura final dos discos
+> * Confirme que todos os volumes foram criados corretamente
+> * A mensagem "Configuração de disco concluída com sucesso!" indica que o processo foi finalizado sem erros
+> * Anote essa configuração para referência futura
 
 ### Opção 2: Configuração Manual
 
