@@ -105,7 +105,7 @@
         "osDiskType": "StandardSSD_LRS",
         "osDiskSizeGB": 128,
         "dataDiskType": "Premium_LRS",
-        "dataDiskSizeGB": 300,
+        "dataDiskSizeGB": 512,
         "subnetAddressPrefix": "10.1.0.0/24",
         "addressPrefix": "10.1.0.0/16",
         "linuxConfiguration": {
