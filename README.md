@@ -200,7 +200,6 @@ O script `securonix-disk-configurator.sh` automatiza todo o processo de configur
 > * Verifique a estrutura final dos discos
 > * Confirme que todos os volumes foram criados corretamente
 > * A mensagem "Configuração de disco concluída com sucesso!" indica que o processo foi finalizado sem erros
-> * Anote essa configuração para referência futura
 
 ### Opção 2: Configuração Manual
 
