@@ -149,12 +149,12 @@ O script `securonix-disk-configurator.sh` automatiza todo o processo de configur
 
    ![Layout de discos e seleção](https://github.com/user-attachments/assets/c407a73e-f085-4041-a06d-c95d9aa03065)
    
-   > [!WARNING]
-   > Nesta tela: 
-   > * Observe todos os discos disponíveis no sistema
-   > * Identifique o disco do sistema (que contém o SO) e o disco de dados não formatado
-   > * Utilize o comando `lsblk` para verificar o tamanho e estrutura de cada disco
-   > * Não prossiga até ter certeza de quais discos serão utilizados
+> [!WARNING]
+> Nesta tela: 
+> * Observe todos os discos disponíveis no sistema
+> * Identifique o disco do sistema (que contém o SO) e o disco de dados não formatado
+> * Utilize o comando `lsblk` para verificar o tamanho e estrutura de cada disco
+> * Não prossiga até ter certeza de quais discos serão utilizados
    
 6. **Seleção da partição do sistema**: Digite a partição do disco do sistema que contém os volumes lógicos.
 
