@@ -141,24 +141,9 @@ O script `securonix-disk-configurator.sh` automatiza todo o processo de configur
 6. **Seleção dos discos**: Na próxima tela, você deverá selecionar os discos para o sistema e para dados. 
 
    ![Layout de discos e seleção](https://github.com/user-attachments/assets/c407a73e-f085-4041-a06d-c95d9aa03065)
-
    
    Exemplo da estrutura de discos que pode aparecer (sua configuração pode ser diferente):
-   ```
-   NAME               MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-   sda                  8:0    0  512G  0 disk
-   sdb                  8:16   0  128G  0 disk
-   ├─sdb1               8:17   0  800M  0 part /boot
-   ├─sdb2               8:18   0 28.7G  0 part
-   │ ├─rootvg-rootlv  252:0    0 18.7G  0 lvm  /
-   │ └─rootvg-crashlv 252:1    0   10G  0 lvm  /var/crash
-   ├─sdb14              8:30   0    4M  0 part
-   └─sdb15              8:31   0  495M  0 part /boot/efi
-   sdc                  8:32   0   32G  0 disk
-   └─sdc1               8:33   0   32G  0 part /mnt
-   sr0                 11:0    1  634K  0 rom
-   ```
-
+   
    ![Seleção de partição do sistema](https://github.com/user-attachments/assets/898dd06e-3eb0-4852-b3c5-c5b9c30e9569)
 
    ![Resumo da configuração](https://github.com/user-attachments/assets/7e3b1b50-4b7d-48c5-96ec-d483ac29d78b)
