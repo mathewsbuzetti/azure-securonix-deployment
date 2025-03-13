@@ -25,7 +25,7 @@ function echo_ciano() {
 clear
 
 # Desenhar a linha tracejada superior
-echo_ciano "==================== CONFIGURADOR DE DISCOS SECURONIX ===================="
+echo_ciano "==================== CONFIGURADOR DE DISCOS SECURONIX 512GB ===================="
 echo
 
 # Tela inicial com informações dos discos (como na imagem 1)
@@ -41,7 +41,7 @@ echo " • rootvg-rootvg_home (20G) - /home/securonix"
 echo " • rootvg-rootvg_opt (10G) - /opt (aplicativos)"
 echo
 echo_ciano "DISCO DE DADOS:"
-echo " • vg_scnx-securonix (todo o espaço) - /Securonix"
+echo " • vg_scnx-securonix (512GB) - /Securonix"
 echo
 echo_vermelho "IMPORTANTE: Recomenda-se usar discos físicos diferentes para melhor performance!"
 echo
@@ -86,10 +86,28 @@ fi
 echo_azul "===== Configuração do Disco de Dados ====="
 read -p "Digite o disco de dados a ser configurado para o Securonix (ex: sdc): " disco_dados
 
-# Validar se o disco de dados existe
-if ! lsblk | grep -q "^$disco_dados"; then
-    echo_vermelho "Erro: Disco $disco_dados não encontrado!"
+# Verificar o tamanho do disco selecionado
+disco_tamanho=$(lsblk -b -o SIZE -n -d /dev/$disco_dados 2>/dev/null)
+if [ -z "$disco_tamanho" ]; then
+    echo_vermelho "Erro: Não foi possível determinar o tamanho do disco $disco_dados!"
     exit 1
+fi
+
+# Converter para GB para exibição
+disco_tamanho_gb=$(echo "scale=0; $disco_tamanho/1024/1024/1024" | bc)
+echo_amarelo "Tamanho do disco: ${disco_tamanho_gb}GB"
+
+# Verificar se o disco tem pelo menos 512GB
+if [ "$disco_tamanho_gb" -lt 512 ]; then
+    echo_vermelho "AVISO: O disco selecionado tem ${disco_tamanho_gb}GB, que é menor que o recomendado de 512GB!"
+    read -p "Deseja continuar mesmo assim? (s/n): " continuar_tamanho
+    if [[ $continuar_tamanho != "s" && $continuar_tamanho != "S" ]]; then
+        echo_vermelho "Operação cancelada pelo usuário."
+        exit 1
+    fi
+    echo_amarelo "Continuando com disco de tamanho menor que o recomendado..."
+else
+    echo_verde "Disco com tamanho adequado detectado (${disco_tamanho_gb}GB)"
 fi
 
 # Exibir resumo da configuração (como na imagem 2)
