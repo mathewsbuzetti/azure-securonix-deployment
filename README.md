@@ -148,14 +148,17 @@ O script `securonix-disk-configurator.sh` automatiza todo o processo de configur
 
 5. **Visualização de discos e seleção**: O script exibirá os discos disponíveis e solicitará que você selecione os discos apropriados.
 
-![Layout de discos e seleção](https://github.com/user-attachments/assets/c407a73e-f085-4041-a06d-c95d9aa03065)
-   
 > [!WARNING]
 > Nesta tela: 
-> * Observe todos os discos disponíveis no sistema
-> * Identifique o disco do sistema (que contém o SO) e o disco de dados não formatado
-> * Utilize o comando `lsblk` para verificar o tamanho e estrutura de cada disco
-> * Não prossiga até ter certeza de quais discos serão utilizados
+> * **Para o disco do SISTEMA**: Você deve selecionar a partição que contém o sistema operacional (por exemplo: sdb2)
+>   - Neste disco, o script criará volumes lógicos para: /, /var, /tmp, swap, /opt, /home
+>   - Os volumes existentes como /boot não serão modificados
+> 
+> * **Para o disco de DADOS**: Você deve selecionar o disco inteiro e não formatado (por exemplo: sda)
+>   - Neste disco, o script criará um único volume lógico grande para /Securonix
+>   - **IMPORTANTE**: Este disco será TOTALMENTE reformatado!
+
+![Layout de discos e seleção](https://github.com/user-attachments/assets/c407a73e-f085-4041-a06d-c95d9aa03065)
    
 6. **Seleção da partição do sistema**: Digite a partição do disco do sistema que contém os volumes lógicos.
 
