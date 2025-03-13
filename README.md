@@ -117,16 +117,15 @@ O script `securonix-disk-configurator.sh` automatiza todo o processo de configur
 
 1. **Criar o arquivo do script**:
 
+   [![Acessar Script securonix-disk-configurator.sh](https://img.shields.io/badge/Acessar%20Script%20securonix--disk--configurator-blue?style=flat-square&logo=linux)](https://github.com/mathewsbuzetti/securonixish/blob/main/Script/securonix-disk-configurator.sh)
+
    ```bash
    nano securonix-disk-configurator.sh
    ```
    * Cole o conteúdo do script disponibilizado
 
-      [![Download Script securonix-disk-configurator.sh](https://img.shields.io/badge/Download%20Script%20securonix--disk--configurator-blue?style=flat-square&logo=linux)](https://github.com/mathewsbuzetti/securonixish/blob/main/Script/securonix-disk-configurator.sh)
-
 > [!WARNING]
 > - Certifique-se de copiar **TODO** o conteúdo do script sem modificações
-> - Execute este comando no diretório onde deseja manter o script
 > - Não altere o nome do arquivo para garantir compatibilidade com as instruções
 > - O script deve ser executado em uma VM recém-criada antes de qualquer outra configuração
 
