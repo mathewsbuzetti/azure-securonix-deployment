@@ -69,7 +69,7 @@ sdc                  512G disk
 
 ### Passos de Implantação Automática
 
-[![Implantar no Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmathewsbuzetti%2Fsecuronixish%2Fmain%2Fazuredeploy.json)
+[![Implantar no Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmathewsbuzetti%2Fsecuronixish%2Fmain%2Ftemplates%2Fazuredeploy.json)
 
 1. Clique no botão acima "Deploy to Azure"
 2. Configure os parâmetros de implantação:
