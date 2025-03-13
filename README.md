@@ -133,44 +133,51 @@ O script `securonix-disk-configurator.sh` automatiza todo o processo de configur
 
 4. **Tela inicial**: O script mostrará a configuração que será aplicada nos discos do sistema e de dados. 
 
-   ![Tela inicial do script de configuração](IMAGEM_TELA_INICIAL)
+   ![Tela inicial do script de configuração](https://github.com/user-attachments/assets/668ab670-8da0-45a6-9222-91dc9719b9f7)
+
    
    > Nesta tela você poderá visualizar as configurações que serão aplicadas no disco do sistema e no disco de dados.
 
-5. **Seleção dos discos**: Na próxima tela, você deverá selecionar os discos para o sistema e para dados. 
+6. **Seleção dos discos**: Na próxima tela, você deverá selecionar os discos para o sistema e para dados. 
 
-   ![Layout de discos e seleção](IMAGEM_LAYOUT_DISCOS)
+   ![Layout de discos e seleção](https://github.com/user-attachments/assets/c407a73e-f085-4041-a06d-c95d9aa03065)
+
    
-   Exemplo da estrutura de discos que pode aparecer:
+   Exemplo da estrutura de discos que pode aparecer (sua configuração pode ser diferente):
    ```
-   NAME                MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-   sda                   8:0    0  100G  0 disk
-   ├─sda1                8:1    0  800M  0 part /boot
-   ├─sda2                8:2    0 28.7G  0 part
-     ├─rootvg-rootlv   252:0    0 18.7G  0 lvm  /
-     ├─rootvg-crashlv  252:1    0   10G  0 lvm  /var/crash
-   ├─sda14               8:14   0    4M  0 part
-   └─sda15               8:15   0  495M  0 part /boot/efi
-   sdb                   8:16   0   32G  0 disk
-   sdc                   8:32   0  512G  0 disk
+   NAME               MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+   sda                  8:0    0  512G  0 disk
+   sdb                  8:16   0  128G  0 disk
+   ├─sdb1               8:17   0  800M  0 part /boot
+   ├─sdb2               8:18   0 28.7G  0 part
+   │ ├─rootvg-rootlv  252:0    0 18.7G  0 lvm  /
+   │ └─rootvg-crashlv 252:1    0   10G  0 lvm  /var/crash
+   ├─sdb14              8:30   0    4M  0 part
+   └─sdb15              8:31   0  495M  0 part /boot/efi
+   sdc                  8:32   0   32G  0 disk
+   └─sdc1               8:33   0   32G  0 part /mnt
+   sr0                 11:0    1  634K  0 rom
    ```
 
-   ![Seleção de partição do sistema](IMAGEM_SELECAO_PARTICAO)
+   ![Seleção de partição do sistema](https://github.com/user-attachments/assets/898dd06e-3eb0-4852-b3c5-c5b9c30e9569)
 
-   * Para o disco do sistema, você deve selecionar a partição (ex: `sda2`)
-   * Para o disco de dados, você deve selecionar o disco completo (ex: `sdc`)
+   ![Resumo da configuração](https://github.com/user-attachments/assets/7e3b1b50-4b7d-48c5-96ec-d483ac29d78b)
 
-6. **Mensagens durante a execução**: Quando solicitado pelo script, responda:
+   * Para o disco do sistema, você deve selecionar a partição que contém os volumes lógicos (ex: `sdb2`)
+   * Para o disco de dados, você deve selecionar o disco completo não formatado (ex: `sda`)
 
-   ![Avisos durante execução](IMAGEM_AVISOS)
-   
+8. **Mensagens durante a execução**: Quando solicitado pelo script, responda:
+
+   ![Avisos durante execução](https://github.com/user-attachments/assets/cd3e6b53-6d23-451d-8245-60f440d12926)
+
    * Quando aparecer "Fix/Ignore?" → Digite `Fix` e pressione ENTER
    * Quando aparecer "Flag to Invert? [pmbr_boot]?" → Apenas pressione ENTER
    * Quando aparecer "New state? [on]/off?" → Digite `on` e pressione ENTER
 
-7. **Conclusão**: Após a execução do script, o sistema exibirá a configuração final dos discos, confirmando o sucesso da operação.
+9. **Conclusão**: Após a execução do script, o sistema exibirá a configuração final dos discos, confirmando o sucesso da operação.
 
-   ![Configuração concluída](IMAGEM_CONCLUSAO)
+   ![Configuração concluída](https://github.com/user-attachments/assets/2d7966b9-2ec5-458d-9de8-fde27d1244eb)
+
 
 ### Opção 2: Configuração Manual
 
@@ -181,17 +188,18 @@ Caso prefira configurar os discos manualmente, siga o procedimento detalhado aba
 #### Exemplo de Estrutura Inicial de Discos
 
 ```
-NAME                MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sda                   8:0    0  100G  0 disk
-├─sda1                8:1    0  800M  0 part /boot
-├─sda2                8:2    0 28.7G  0 part
-  ├─rootvg-rootlv   252:0    0 18.7G  0 lvm  /
-  ├─rootvg-crashlv  252:1    0   10G  0 lvm  /var/crash
-├─sda14               8:14   0    4M  0 part
-└─sda15               8:15   0  495M  0 part /boot/efi
-sdb                   8:16   0   32G  0 disk
-sdc                   8:32   0  512G  0 disk
-sr0                  11:0    1  634K  0 rom
+NAME               MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                  8:0    0  512G  0 disk
+sdb                  8:16   0  128G  0 disk
+├─sdb1               8:17   0  800M  0 part /boot
+├─sdb2               8:18   0 28.7G  0 part
+│ ├─rootvg-rootlv  252:0    0 18.7G  0 lvm  /
+│ └─rootvg-crashlv 252:1    0   10G  0 lvm  /var/crash
+├─sdb14              8:30   0    4M  0 part
+└─sdb15              8:31   0  495M  0 part /boot/efi
+sdc                  8:32   0   32G  0 disk
+└─sdc1               8:33   0   32G  0 part /mnt
+sr0                 11:0    1  634K  0 rom
 ```
 
 > [!WARNING]
@@ -212,36 +220,37 @@ lsblk
 #### 2. Configuração do Disco do Sistema
 
 > [!WARNING]
-> Substitua `/dev/sda` pela letra do disco correto em seu ambiente.
+> Nos exemplos abaixo, estamos usando `/dev/sdb` como o disco do sistema e `/dev/sdb2` como a partição principal. Substitua por suas letras de disco corretas.
 > 
 > Como identificar a letra correta:
 > - Use o comando `lsblk` para visualizar os discos
-> - Verifique qual disco corresponde ao disco do sistema
-> - Substitua todos os comandos abaixo com a letra do disco identificado
+> - Verifique qual disco contém as partições do sistema operacional
+> - Identifique a partição principal (que normalmente contém os volumes lógicos rootvg)
+> - Substitua todos os comandos abaixo com as letras de disco identificadas
 
 1. Ajuste da partição:
 ```bash
-sudo parted /dev/sda disk_set pmbr_boot on
+sudo parted /dev/sdb disk_set pmbr_boot on
 ```
 > [!WARNING]
->  - *Substitua `sda` pela letra do seu disco do sistema*
+>  - *Substitua `sdb` pela letra do seu disco do sistema*
 >  - Responda "Fix" se perguntado
 >  - Pressione ENTER para "Flag to Invert"
 >  - Digite "on" para new state
 
 2. Redimensionamento da partição:
 ```bash
-sudo parted /dev/sda resizepart 2 95%
+sudo parted /dev/sdb resizepart 2 95%
 ```
 > [!WARNING]\
-> *Substitua `sda` pela letra do seu disco do sistema*
+> *Substitua `sdb` pela letra do seu disco do sistema e `2` pelo número correto da partição*
 
 3. Redimensionamento do volume físico:
 ```bash
-sudo pvresize /dev/sda2
+sudo pvresize /dev/sdb2
 ```
 > [!WARNING]\
-> *Substitua `sda` pela letra do seu disco do sistema*
+> *Substitua `sdb2` pela letra e número da partição correta em seu sistema*
 
 4. Aumento do volume root:
 ```bash
@@ -273,31 +282,30 @@ sudo mkfs.xfs -f /dev/rootvg/rootvg_opt
 #### 5. Configuração do Disco Adicional de 512GB
 
 > [!WARNING]
-> Substitua `/dev/sdc` e `/dev/sdc1` pelas letras corretas do disco adicional de 512GB em seu ambiente.
+> Nos exemplos abaixo, estamos usando `/dev/sda` como o disco de dados de 512GB. Substitua pela letra do seu disco de dados.
 > 
 > Como identificar a letra correta:
 > 1. Use o comando `lsblk` para visualizar os discos
-> 2. Identifique o disco de 512GB
+> 2. Identifique o disco não formatado de 512GB
 > 3. Substitua todos os comandos abaixo com a letra do disco identificado
-> 4. Preste atenção especial na numeração da partição (sdc**1**)
 
 ```bash
-sudo parted --script /dev/sdc mklabel gpt
-sudo parted --script /dev/sdc mkpart primary 0% 100%
-sudo pvcreate /dev/sdc1
-sudo vgcreate --physicalextentsize 32 vg_scnx /dev/sdc1
+sudo parted --script /dev/sda mklabel gpt
+sudo parted --script /dev/sda mkpart primary 0% 100%
+sudo pvcreate /dev/sda1
+sudo vgcreate --physicalextentsize 32 vg_scnx /dev/sda1
 sudo lvcreate --extents 100%FREE vg_scnx --name securonix --yes
 sudo mkdir -p /Securonix
 sudo mkfs.xfs -f /dev/vg_scnx/securonix
 ```
 
 **Exemplos práticos:**
-- Se seu disco de 512GB for `sdb`, use:
+- Se seu disco de 512GB for `sdc`, use:
   ```bash
-  sudo parted --script /dev/sdb mklabel gpt
-  sudo parted --script /dev/sdb mkpart primary 0% 100%
-  sudo pvcreate /dev/sdb1
-  sudo vgcreate --physicalextentsize 32 vg_scnx /dev/sdb1
+  sudo parted --script /dev/sdc mklabel gpt
+  sudo parted --script /dev/sdc mkpart primary 0% 100%
+  sudo pvcreate /dev/sdc1
+  sudo vgcreate --physicalextentsize 32 vg_scnx /dev/sdc1
   sudo lvcreate --extents 100%FREE vg_scnx --name securonix --yes
   sudo mkdir -p /Securonix
   sudo mkfs.xfs -f /dev/vg_scnx/securonix
@@ -307,8 +315,9 @@ sudo mkfs.xfs -f /dev/vg_scnx/securonix
 > Sempre verifique a saída do comando `lsblk` antes de executar qualquer operação de particionamento.
 
 > [!WARNING]
-> - A numeração da partição (sdc**1**) deve corresponder à partição criada no comando `mkpart`
-> - Se o comando `lsblk` mostrar uma diferente numeração, ajuste os comandos de acordo
+> - Após a criação da partição com `mkpart`, o sistema normalmente cria automaticamente o nó de dispositivo (ex: `/dev/sda1`)
+> - Aguarde alguns segundos após o comando `mkpart` antes de prosseguir para garantir que o sistema reconheça a nova partição
+> - Se o dispositivo não aparecer, pode ser necessário executar `partprobe` para atualizar as tabelas de partição
 
 #### 6. Criação de Pontos de Montagem
 
@@ -343,10 +352,15 @@ sudo systemctl daemon-reload
 
 #### Estrutura Final Esperada Após Configuração
 
+Dependendo da sua configuração inicial, a estrutura final pode variar. Abaixo está um exemplo com base na configuração mostrada anteriormente:
+
 ```
-sda                  128G disk
-├─sda1               800M part /boot
-├─sda2               120.3G part
+sda                  512G disk
+└─sda1               512G part
+  └─vg_scnx-securonix 512G lvm /Securonix
+sdb                  128G disk
+├─sdb1               800M part /boot
+├─sdb2               120.3G part
   ├─rootvg-rootlv      20G lvm /
   ├─rootvg-crashlv     10G lvm /var/crash
   ├─rootvg-rootvg_swap 9.5G lvm [SWAP]
@@ -354,12 +368,12 @@ sda                  128G disk
   ├─rootvg-rootvg_var  10G lvm /var
   ├─rootvg-rootvg_home 20G lvm /home/securonix
   └─rootvg-rootvg_opt  10G lvm /opt
-sdb                   32G disk
-└─sdb1                32G part /mnt
-sdc                  512G disk
-└─sdc1               512G part
-  └─vg_scnx-securonix 512G lvm /Securonix
+sdc                   32G disk
+└─sdc1                32G part /mnt
 ```
+
+> [!NOTE]
+> A ordem e as letras dos discos podem variar no seu ambiente. O importante é que os volumes lógicos estejam configurados corretamente com os tamanhos e pontos de montagem especificados.
 
 ## 🔄 Versionamento
 
