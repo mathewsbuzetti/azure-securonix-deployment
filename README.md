@@ -164,8 +164,8 @@ O script `securonix-disk-configurator.sh` automatiza todo o processo de configur
    
 6. **Seleção da partição do sistema**: Digite a partição do disco do sistema que contém os volumes lógicos.
 
-![Seleção de partição do sistema](https://github.com/user-attachments/assets/acaf2ebd-b6e4-428b-9210-af05b3e2a4e9)
-   
+![Seleção de partição do sistema](https://github.com/user-attachments/assets/1377d96f-1dc5-4ecd-964c-9c9eab31134e)
+
 > [!WARNING]
 > * Neste exemplo, o usuário selecionou `sdb2` como a partição do sistema
 > * Em seguida, você deverá selecionar o disco para dados (ex: `sda`)
