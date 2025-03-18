@@ -184,7 +184,7 @@ O script `securonix-disk-configurator.sh` automatiza todo o processo de configur
 
 8. **Mensagens durante a execução**: Durante a configuração, você verá avisos do sistema que requerem sua interação:
 
-![Avisos durante execução](https://github.com/user-attachments/assets/cd3e6b53-6d23-451d-8245-60f440d12926)
+![Avisos durante execução](https://github.com/user-attachments/assets/ca9f774e-997a-4882-b25c-4de6321e7a7b)
    
 > [!WARNING]
 > Quando essas mensagens aparecerem, responda **EXATAMENTE** da seguinte forma:
